@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../utils/supabaseClient'
 import '../styles/globals.css'
+import Layout from '../components/Layout'
 
 function MyApp({ Component, pageProps }) {
   const [session, setSession] = useState(null)
@@ -13,7 +14,11 @@ function MyApp({ Component, pageProps }) {
     })
   }, [session])
 
-  return <Component {...pageProps} userSession={session} />
+  return (
+    <Layout userSession={session}>
+      <Component {...pageProps} userSession={session} />
+    </Layout>
+  )
 }
 
 export default MyApp
