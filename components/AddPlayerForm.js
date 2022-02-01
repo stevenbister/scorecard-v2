@@ -1,11 +1,9 @@
 import { useState } from 'react'
-import useSession from '../hooks/useSession'
 import { supabase } from '../utils/supabaseClient'
 
 // TODO: Add react context so we can pass the session state through all of our components
 // TODO: Add error handling component
-const AddPlayerForm = () => {
-  const session = useSession()
+const AddPlayerForm = ({userSession}) => {
   const [playerName, setPlayerName] = useState(null)
 
   const handleUpdate = async (e) => {
@@ -13,7 +11,7 @@ const AddPlayerForm = () => {
 
     try {
       let { data, error, status } = await supabase.from('players').insert({
-          profile_id: session.user.id,
+          profile_id: userSession.user.id,
           player_name: playerName,
         })
 

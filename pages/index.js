@@ -1,13 +1,11 @@
-import useSession from '../hooks/useSession'
 import Auth from '../components/Auth'
 import Link from 'next/link'
 
-const Home = () => {
-  const session = useSession()
+const Home = ({userSession}) => {
 
   return (
     <div className="container" style={{ padding: '50px 0 100px 0' }}>
-      {session ?
+      {userSession ?
       <>
         <Link href="/profile">Profile</Link>
         <Link href="/players">Players</Link>

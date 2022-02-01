@@ -1,14 +1,12 @@
 import Auth from '../components/Auth'
 import ProfileForm from '../components/ProfileForm'
-import useSession from '../hooks/useSession'
 
-const Profile = () => {
-  const session = useSession()
+const Profile = ({userSession}) => {
 
   return (
     <>
       <h1>Profile</h1>
-      {session ? <ProfileForm /> : <Auth />}
+      {userSession ? <ProfileForm userSession={userSession} /> : <Auth />}
     </>
   )
 }

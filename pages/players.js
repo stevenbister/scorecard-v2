@@ -1,18 +1,15 @@
 import AddPlayerForm from '../components/AddPlayerForm'
 import ListPlayers from '../components/ListPlayers'
 import Auth from '../components/Auth'
-import useSession from '../hooks/useSession'
 
-const Profile = () => {
-  const session = useSession()
-
+const Profile = ({userSession}) => {
   return (
     <>
       <h1>Players</h1>
-      {session ?
+      {userSession ?
 
       <>
-        <AddPlayerForm />
+        <AddPlayerForm userSession={userSession} />
         <ListPlayers />
       </>
 

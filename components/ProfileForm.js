@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react'
-import useSession from '../hooks/useSession'
 import { supabase } from '../utils/supabaseClient'
 import { getProfile, updateProfile } from '../utils/manageProfile'
 
-const ProfileForm = () => {
-  const session = useSession()
+const ProfileForm = ({userSession}) => {
   const [loading, setLoading] = useState(true)
   const [email, setEmail] = useState(null)
   const [username, setUsername] = useState(null)
@@ -21,7 +19,7 @@ const ProfileForm = () => {
         setLoading(false)
       }
     })();
-  }, [session])
+  }, [userSession])
 
   const handleUpdate = async () => {
     try {
