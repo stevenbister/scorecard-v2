@@ -13,6 +13,8 @@ const Players = ({userSession}) => {
         const data = await getPlayers()
 
         setPlayers(data)
+
+        // TODO: Clean up async function
     })()
   }, [players])
 
