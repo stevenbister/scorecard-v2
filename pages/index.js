@@ -1,13 +1,11 @@
-import Link from 'next/link'
+import Game from '../components/Game'
+
 
 const Home = ({userSession}) => {
 
   return (
-    <div className="container" style={{ padding: '50px 0 100px 0' }}>
-      <>
-        <Link href="/profile">Profile</Link>
-        <Link href="/players">Players</Link>
-      </>
+    <div className="container" style={{ padding: '50px' }}>
+        <Game />
     </div>
   )
 }
