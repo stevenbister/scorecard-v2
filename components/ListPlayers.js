@@ -1,5 +1,7 @@
+import Player from "./Player"
+
 const ListPlayers = ({players}) => {
-  const playerList = players.map(player => <li key={player.id} >{player.player_name}</li>)
+  const playerList = players.length > 0 && players.map(player => <li key={player.id} ><Player playerName={player.player_name}/></li>)
 
   return (
     <>
