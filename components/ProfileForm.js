@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../utils/supabaseClient'
 import { getProfile, updateProfile } from '../utils/manageProfile'
 
-const ProfileForm = ({userSession}) => {
+const ProfileForm = ({ userSession }) => {
   const [loading, setLoading] = useState(true)
   const [email, setEmail] = useState(null)
   const [username, setUsername] = useState(null)
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       try {
         setLoading(true)
         const profile = await getProfile()
@@ -18,7 +18,7 @@ const ProfileForm = ({userSession}) => {
       } finally {
         setLoading(false)
       }
-    })();
+    })()
   }, [userSession])
 
   const handleUpdate = async () => {
@@ -57,7 +57,10 @@ const ProfileForm = ({userSession}) => {
       </div>
 
       <div>
-        <button className="button block" onClick={() => supabase.auth.signOut()}>
+        <button
+          className="button block"
+          onClick={() => supabase.auth.signOut()}
+        >
           Sign Out
         </button>
       </div>

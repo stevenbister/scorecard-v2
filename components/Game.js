@@ -1,13 +1,15 @@
-import useLocalStorage from "../hooks/useLocalStorage"
+import useLocalStorage from '../hooks/useLocalStorage'
 
 const Game = () => {
-  const [ playersInGame ] = useLocalStorage('players', []);
+  const [playersInGame] = useLocalStorage('players', [])
 
-  return(
+  return (
     <>
       <h1>Game</h1>
       <ul>
-        {playersInGame.map(player => <li key={player}>{player}</li>)}
+        {playersInGame.map((player) => (
+          <li key={player}>{player}</li>
+        ))}
       </ul>
     </>
   )

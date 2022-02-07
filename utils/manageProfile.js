@@ -5,7 +5,10 @@ const getProfile = async () => {
     const user = supabase.auth.user()
 
     let { data, error, status } = await supabase
-      .from('profiles').select(`username`).eq('id', user.id).single()
+      .from('profiles')
+      .select(`username`)
+      .eq('id', user.id)
+      .single()
 
     if (error && status !== 406) {
       throw error
@@ -13,10 +16,10 @@ const getProfile = async () => {
 
     const profile = {
       email: user && user.email,
-      username: data && data.username
+      username: data && data.username,
     }
 
-    return profile;
+    return profile
   } catch (error) {
     alert(error.message) //TODO: Better error handling
   }

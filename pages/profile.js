@@ -1,7 +1,6 @@
 import ProfileForm from '../components/ProfileForm'
 
-const Profile = ({userSession}) => {
-
+const Profile = ({ userSession }) => {
   return (
     <>
       <h1>Profile</h1>

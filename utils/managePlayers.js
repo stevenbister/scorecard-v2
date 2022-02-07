@@ -1,4 +1,4 @@
-import { supabase } from "./supabaseClient"
+import { supabase } from './supabaseClient'
 
 /**
  * Gets a list of players based on the logged in user's ID.
@@ -8,12 +8,13 @@ const getPlayers = async () => {
     const user = supabase.auth.user()
 
     let { data, error, status } = await supabase
-      .from('players').select('id, player_name, created_at, profile_id').eq('profile_id', user.id)
+      .from('players')
+      .select('id, player_name, created_at, profile_id')
+      .eq('profile_id', user.id)
 
     if (error && status !== 406) throw error
 
     return data
-
   } catch (error) {
     throw error
   }
@@ -35,14 +36,13 @@ const createPlayer = async (e, playerName) => {
     const user = supabase.auth.user()
 
     let { data, error, status } = await supabase.from('players').insert({
-        profile_id: user.id,
-        player_name: playerName,
-      })
+      profile_id: user.id,
+      player_name: playerName,
+    })
 
     if (error && status !== 406) throw error
 
     return data
-
   } catch (error) {
     throw error
   }
@@ -56,12 +56,14 @@ const createPlayer = async (e, playerName) => {
  */
 const deletePlayer = async (playerName) => {
   try {
-    const { data, error } = await supabase.from('players').delete().match({ player_name: playerName })
+    const { data, error } = await supabase
+      .from('players')
+      .delete()
+      .match({ player_name: playerName })
 
     if (error) throw error
 
     return data
-
   } catch (error) {
     throw error
   }

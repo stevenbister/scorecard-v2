@@ -1,23 +1,38 @@
-import { useState } from "react"
-import { deletePlayer } from "../utils/managePlayers"
+import { useState } from 'react'
+import { deletePlayer } from '../utils/managePlayers'
 
-const Player = ({playerName, addToGame, removeFromGame}) => {
+const Player = ({ playerName, addToGame, removeFromGame }) => {
   const [playerIsInGame, setPlayerIsInGame] = useState(false)
 
-  return(
+  return (
     <div>
       <span>{playerName}</span>
 
       <button
-        onClick={() => {addToGame(playerName), setPlayerIsInGame(true)}} disabled={playerIsInGame}>
+        onClick={() => {
+          addToGame(playerName), setPlayerIsInGame(true)
+        }}
+        disabled={playerIsInGame}
+      >
         Add to game
       </button>
 
-      <button onClick={() => {removeFromGame(playerName), setPlayerIsInGame(false)}} disabled={!playerIsInGame}>
+      <button
+        onClick={() => {
+          removeFromGame(playerName), setPlayerIsInGame(false)
+        }}
+        disabled={!playerIsInGame}
+      >
         Remove from game
       </button>
 
-      <button onClick={() => {removeFromGame(playerName), deletePlayer(playerName)}}>Delete</button>
+      <button
+        onClick={() => {
+          removeFromGame(playerName), deletePlayer(playerName)
+        }}
+      >
+        Delete
+      </button>
     </div>
   )
 }

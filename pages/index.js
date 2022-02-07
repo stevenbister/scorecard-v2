@@ -1,11 +1,9 @@
 import Game from '../components/Game'
 
-
-const Home = ({userSession}) => {
-
+const Home = ({ userSession }) => {
   return (
     <div className="container" style={{ padding: '50px' }}>
-        <Game />
+      <Game />
     </div>
   )
 }

@@ -4,17 +4,17 @@ import ListPlayers from '../components/ListPlayers'
 import { getPlayers, createPlayer } from '../utils/managePlayers'
 
 // TODO: Add error handling component
-const Players = ({userSession}) => {
+const Players = ({ userSession }) => {
   const [playerName, setPlayerName] = useState(null)
-  const [players, setPlayers] = useState([]);
+  const [players, setPlayers] = useState([])
 
   useEffect(() => {
-    (async () => {
-        const data = await getPlayers()
+    ;(async () => {
+      const data = await getPlayers()
 
-        setPlayers(data)
+      setPlayers(data)
 
-        // TODO: Clean up async function
+      // TODO: Clean up async function
     })()
   }, [players])
 

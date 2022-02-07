@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect } from 'react'
 
 /**
  * Custom hook to set and get items in our localstorage
@@ -24,7 +24,7 @@ const useLocalStorage = (key, defaultValue) => {
     window.localStorage.setItem(key, JSON.stringify(value))
   }, [key, value])
 
-  return[value, setValue]
+  return [value, setValue]
 }
 
 export default useLocalStorage
