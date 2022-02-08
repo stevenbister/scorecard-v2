@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import Player from './Player'
 import useLocalStorage from '../hooks/useLocalStorage'
 
@@ -29,7 +28,7 @@ const ListPlayers = ({ players }) => {
   return (
     <>
       <h2>Players saved</h2>
-      <ul>{playerList}</ul>
+      {players.length > 0 ? <ul>{playerList}</ul> : <p>No players</p>}
     </>
   )
 }
