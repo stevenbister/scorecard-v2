@@ -10,9 +10,7 @@ const getProfile = async () => {
       .eq('id', user.id)
       .single()
 
-    if (error && status !== 406) {
-      throw error
-    }
+    if (error && status !== 406) console.error(error)
 
     const profile = {
       email: user && user.email,
@@ -21,7 +19,7 @@ const getProfile = async () => {
 
     return profile
   } catch (error) {
-    alert(error.message) //TODO: Better error handling
+    console.error(error) //TODO: Better error handling
   }
 }
 
@@ -39,11 +37,9 @@ const updateProfile = async (username) => {
       returning: 'minimal', // Don't return the value after inserting
     })
 
-    if (error) {
-      throw error
-    }
+    if (error) console.error(error)
   } catch (error) {
-    alert(error.message) //TODO: Better error handling
+    console.error(error) //TODO: Better error handling
   }
 }
 
