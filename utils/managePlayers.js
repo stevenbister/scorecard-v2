@@ -10,13 +10,13 @@ const getPlayers = async () => {
     let { data, error, status } = await supabase
       .from('players')
       .select('id, player_name, created_at, profile_id')
-      .eq('profile_id', user.id)
+      .eq('profile_id', user?.id)
 
-    if (error && status !== 406) throw error
+    if (error && status !== 406) console.error(error)
 
     return data
   } catch (error) {
-    throw error
+    console.log(error)
   }
 }
 
@@ -40,11 +40,11 @@ const createPlayer = async (e, playerName) => {
       player_name: playerName,
     })
 
-    if (error && status !== 406) throw error
+    if (error && status !== 406) console.error(error)
 
     return data
   } catch (error) {
-    throw error
+    console.error(error)
   }
 }
 
@@ -61,11 +61,11 @@ const deletePlayer = async (playerName) => {
       .delete()
       .match({ player_name: playerName })
 
-    if (error) throw error
+    if (error) console.error(error)
 
     return data
   } catch (error) {
-    throw error
+    console.error(error)
   }
 }
 
