@@ -14,7 +14,7 @@ const ListPlayers = ({ players }) => {
   }
 
   const playerList =
-    players.length > 0 &&
+    players?.length > 0 &&
     players.map((player) => (
       <li key={player.id}>
         <Player
@@ -28,7 +28,7 @@ const ListPlayers = ({ players }) => {
   return (
     <>
       <h2>Players saved</h2>
-      {players.length > 0 ? <ul>{playerList}</ul> : <p>No players</p>}
+      {players?.length > 0 ? <ul>{playerList}</ul> : <p>No players</p>}
     </>
   )
 }
