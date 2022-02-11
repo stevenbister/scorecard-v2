@@ -26,7 +26,9 @@ const Auth = () => {
           Sign in via magic link with your email below
         </p>
         <div>
+          <label htmlFor="email">Your email</label>
           <input
+            id="email"
             className="inputField"
             type="email"
             placeholder="Your email"

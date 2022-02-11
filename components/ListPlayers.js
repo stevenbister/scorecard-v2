@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import Player from './Player'
 import useLocalStorage from '../hooks/useLocalStorage'
 
@@ -15,7 +14,7 @@ const ListPlayers = ({ players }) => {
   }
 
   const playerList =
-    players.length > 0 &&
+    players?.length > 0 &&
     players.map((player) => (
       <li key={player.id}>
         <Player
@@ -29,7 +28,7 @@ const ListPlayers = ({ players }) => {
   return (
     <>
       <h2>Players saved</h2>
-      <ul>{playerList}</ul>
+      {players?.length > 0 ? <ul>{playerList}</ul> : <p>No players</p>}
     </>
   )
 }

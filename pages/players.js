@@ -4,18 +4,25 @@ import ListPlayers from '../components/ListPlayers'
 import { getPlayers, createPlayer } from '../utils/managePlayers'
 
 // TODO: Add error handling component
-const Players = ({ userSession }) => {
-  const [playerName, setPlayerName] = useState(null)
+const Players = () => {
+  const [playerName, setPlayerName] = useState('')
   const [players, setPlayers] = useState([])
 
   useEffect(() => {
-    ;(async () => {
-      const data = await getPlayers()
+    // Init a variable to track when the component is mounted
+    // We can use this to clean up our async funciton
+    let mounted = true
 
-      setPlayers(data)
+    if (mounted) {
+      const handleSetPlayers = async () => {
+        const data = await getPlayers()
+        setPlayers(data)
+      }
+      handleSetPlayers()
+    }
 
-      // TODO: Clean up async function
-    })()
+    // Side effect cleanup
+    return () => (mounted = false)
   }, [players])
 
   return (
@@ -23,10 +30,9 @@ const Players = ({ userSession }) => {
       <h1>Players</h1>
 
       <AddPlayerForm
-        userSession={userSession}
         handleSubmit={(e) => createPlayer(e, playerName)}
+        value={playerName}
         onChange={(e) => setPlayerName(e.target.value)}
-        playerName={playerName}
       />
       <ListPlayers players={players} />
     </>
