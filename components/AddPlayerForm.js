@@ -1,8 +1,14 @@
-const AddPlayerForm = ({ handleSubmit, onChange }) => {
+const AddPlayerForm = ({ handleSubmit, value, onChange }) => {
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} name="addPlayerForm">
       <label htmlFor="name">Player Name</label>
-      <input id="name" type="text" onChange={onChange} />
+      <input
+        id="name"
+        name="name"
+        type="text"
+        value={value}
+        onChange={onChange}
+      />
 
       <button>Add</button>
     </form>
