@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types'
+
 const AddPlayerForm = ({ handleSubmit, value, onChange }) => {
   return (
     <form onSubmit={handleSubmit} name="addPlayerForm">
@@ -13,6 +15,12 @@ const AddPlayerForm = ({ handleSubmit, value, onChange }) => {
       <button>Add</button>
     </form>
   )
+}
+
+AddPlayerForm.propTypes = {
+  handleSubmit: PropTypes.func,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
 }
 
 export default AddPlayerForm

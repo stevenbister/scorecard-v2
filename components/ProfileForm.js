@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types'
+
 const ProfileForm = ({ email, userName, handleSubmit, setUserName }) => {
   return (
     <form onSubmit={handleSubmit} name="profileForm">
@@ -22,6 +24,13 @@ const ProfileForm = ({ email, userName, handleSubmit, setUserName }) => {
       <button>Update</button>
     </form>
   )
+}
+
+ProfileForm.propTypes = {
+  email: PropTypes.string,
+  userName: PropTypes.string,
+  handleSubmit: PropTypes.func,
+  setUserName: PropTypes.func,
 }
 
 export default ProfileForm

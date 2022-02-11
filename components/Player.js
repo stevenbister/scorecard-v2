@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { deletePlayer } from '../utils/managePlayers'
 
@@ -36,4 +37,11 @@ const Player = ({ playerName, addToGame, removeFromGame }) => {
     </div>
   )
 }
+
+Player.propTypes = {
+  playerName: PropTypes.string,
+  addToGame: PropTypes.func,
+  removeFromGame: PropTypes.func,
+}
+
 export default Player

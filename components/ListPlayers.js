@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import Player from './Player'
 import useLocalStorage from '../hooks/useLocalStorage'
 
@@ -31,6 +32,10 @@ const ListPlayers = ({ players }) => {
       {players?.length > 0 ? <ul>{playerList}</ul> : <p>No players</p>}
     </>
   )
+}
+
+ListPlayers.propTypes = {
+  players: PropTypes.array,
 }
 
 export default ListPlayers
