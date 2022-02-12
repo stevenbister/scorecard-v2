@@ -5,7 +5,7 @@ describe('ListPlayers', () => {
   test('renders no players when the player list is empty', () => {
     render(<ListPlayers players={[]} />)
 
-    expect(screen.queryByRole('list')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('playerList')).not.toBeInTheDocument()
     expect(screen.queryByText(/no players/i)).toBeInTheDocument()
   })
 
