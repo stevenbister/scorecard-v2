@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Heading, Button, VStack } from '@chakra-ui/react'
 import ProfileForm from '../components/ProfileForm'
 import { supabase } from '../utils/supabaseClient'
 import { getProfile, updateProfile } from '../utils/manageProfile'
@@ -36,22 +37,27 @@ const Profile = () => {
   }
 
   return (
-    <>
-      <h1>Your profile</h1>
+    <VStack align="stretch" spacing={6}>
+      <Heading as="h1" align="center">
+        Your profile
+      </Heading>
 
-      <h2>Update your details</h2>
+      <Heading as="h2" align="center">
+        Update your details
+      </Heading>
+
       <ProfileForm
         email={email}
         userName={username}
         setUserName={(e) => setUsername(e.target.value)}
         handleSubmit={(e) => updateUserProfile(e)}
+        loading={loading}
       />
 
-      {/* TODO: This could be a spinner component or something perhaps */}
-      {loading ? <div className="loader">Loading</div> : null}
-
-      <button onClick={() => supabase.auth.signOut()}>Sign Out</button>
-    </>
+      <Button variant="outline" onClick={() => supabase.auth.signOut()}>
+        Sign Out
+      </Button>
+    </VStack>
   )
 }
 
