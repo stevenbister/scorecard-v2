@@ -8,13 +8,13 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
+import useLocalStorage from '../hooks/useLocalStorage'
 import { supabase } from '../utils/supabaseClient'
 import createPinNumber from '../utils/createPinNumber'
 
 const Game = () => {
   const [loading, setLoading] = useState(false)
-  const [pin, setPin] = useState('')
-  // TODO: Persist pin -- perhaps check to see which games are active and whether player is in it? Maybe use context?
+  const [pin, setPin] = useLocalStorage('pin', '')
 
   // Check our pin number against all of the currently live games.
   // If the pin exists elsewhere regenerate it so we don't ever have two
@@ -89,6 +89,9 @@ const Game = () => {
         .match({ creator_id: user.id, pin })
 
       if (error) console.error(status, error)
+
+      // Remove our saved pin number
+      setPin('')
     } catch (error) {
       console.error(error)
     } finally {
@@ -162,14 +165,19 @@ const Game = () => {
       <Button onClick={createGame} isLoading={loading}>
         Create Game
       </Button>
-      <Text>Pin: {pin}</Text>
-      <Button
-        onClick={() => endGame(pin)}
-        isLoading={loading}
-        colorScheme="red"
-      >
-        End Game
-      </Button>
+
+      {pin ? (
+        <>
+          <Text>Pin: {pin}</Text>
+          <Button
+            onClick={() => endGame(pin)}
+            isLoading={loading}
+            colorScheme="red"
+          >
+            End Game
+          </Button>
+        </>
+      ) : null}
     </VStack>
   )
 }
