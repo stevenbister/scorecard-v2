@@ -1,5 +1,13 @@
 import { useState } from 'react'
-import { Button } from '@chakra-ui/react'
+import {
+  Button,
+  Divider,
+  PinInput,
+  PinInputField,
+  Heading,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
 import { supabase } from '../utils/supabaseClient'
 import createPinNumber from '../utils/createPinNumber'
 
@@ -88,17 +96,81 @@ const Game = () => {
     }
   }
 
+  // TODO: When joins successfully redirect player to the game screen
+  const joinGame = async (e) => {
+    e.preventDefault()
+    // Join pin input values
+    let pinInputValue = ''
+
+    const pinInputs = [...e.target.elements].filter(
+      (input) => !input.matches('[type="submit"]'),
+    )
+
+    for (const input of pinInputs) {
+      pinInputValue += input.value
+    }
+
+    try {
+      setLoading(true)
+      const user = supabase.auth.user()
+
+      const { data, error, status } = await supabase
+        .from('games')
+        .update({
+          players_in_game: `[{
+            id: ${user.id}
+          }]`,
+        })
+        .match({ in_progress: true, pin: pinInputValue })
+
+      console.log(data)
+
+      if (error) console.error(status, error)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
-    <>
-      <h1>Game</h1>
-      Pin: {pin}
+    <VStack align="stretch">
+      <Heading>Game</Heading>
+      <Heading as="h2" align="center">
+        Join a game
+      </Heading>
+
+      <form onSubmit={(e) => joinGame(e)} name="joinGame">
+        <PinInput>
+          <PinInputField />
+          <PinInputField />
+          <PinInputField />
+          <PinInputField />
+          <PinInputField />
+        </PinInput>
+        <Button type="submit" isLoading={loading}>
+          Join
+        </Button>
+      </form>
+
+      <Divider />
+
+      <Heading as="h2" align="center">
+        Start a game
+      </Heading>
+
       <Button onClick={createGame} isLoading={loading}>
         Create Game
       </Button>
-      <Button onClick={() => endGame(pin)} isLoading={loading}>
+      <Text>Pin: {pin}</Text>
+      <Button
+        onClick={() => endGame(pin)}
+        isLoading={loading}
+        colorScheme="red"
+      >
         End Game
       </Button>
-    </>
+    </VStack>
   )
 }
 export default Game
