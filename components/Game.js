@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Button,
   Divider,
@@ -15,6 +15,20 @@ import createPinNumber from '../utils/createPinNumber'
 const Game = () => {
   const [loading, setLoading] = useState(false)
   const [pin, setPin] = useLocalStorage('pin', '')
+  const [activeGame, setActiveGame] = useLocalStorage('activeGame', '')
+  const [players, setPlayers] = useLocalStorage([])
+
+  useEffect(() => {
+    let mounted = true
+
+    if (mounted) {
+      getPlayersInGame()
+      console.log({ players })
+    }
+
+    // Async side effect cleanup
+    return () => (mounted = false)
+  }, [activeGame])
 
   // Check our pin number against all of the currently live games.
   // If the pin exists elsewhere regenerate it so we don't ever have two
@@ -54,14 +68,13 @@ const Game = () => {
 
       const gamePin = await createGamePin()
       setPin(gamePin)
+      setActiveGame(gamePin)
 
       const { data, error, status } = await supabase.from('games').insert({
         creator_id: user.id,
         pin: gamePin,
         in_progress: true,
-        players_in_game: `[{
-          id: ${user.id}
-        }]`,
+        players_in_game: JSON.stringify({ id: user.id }),
       })
 
       if (error) console.error(status, error)
@@ -92,6 +105,7 @@ const Game = () => {
 
       // Remove our saved pin number
       setPin('')
+      setActiveGame('')
     } catch (error) {
       console.error(error)
     } finally {
@@ -117,22 +131,75 @@ const Game = () => {
       setLoading(true)
       const user = supabase.auth.user()
 
-      const { data, error, status } = await supabase
+      // Check to make sure our player isn't already in the game
+      const activePlayers = await supabase
+        .from('games')
+        .select('players_in_game')
+        .match({ in_progress: true, pin: pinInputValue })
+
+      // Turn our string of players into an array
+      const { players_in_game } = activePlayers.data[0]
+
+      const currentPlayers = players_in_game
+        .split(',')
+        .filter((currentPlayer) => currentPlayer !== '')
+
+      for (const currentPlayer of currentPlayers) {
+        if (currentPlayer === '') continue // Skip any blank strings
+        const currentPlayerID = JSON.parse(currentPlayer).id
+
+        // if user id doesn't match player id add them to the players list
+        if (user.id !== currentPlayerID) {
+          currentPlayers.push(JSON.stringify({ id: user.id }))
+        }
+      }
+
+      const updatePlayers = await supabase
         .from('games')
         .update({
-          players_in_game: `[{
-            id: ${user.id}
-          }]`,
+          players_in_game: JSON.stringify(currentPlayers),
         })
         .match({ in_progress: true, pin: pinInputValue })
 
-      console.log(data)
+      console.log(updatePlayers.data)
 
-      if (error) console.error(status, error)
+      if (updatePlayers.error)
+        console.error(updatePlayers.status, updatePlayers.error)
+
+      setActiveGame(pinInputValue)
     } catch (error) {
       console.error(error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  // TODO: A lot of boilerplate code going on -- could I refactor?
+  const getPlayersInGame = async () => {
+    try {
+      const { data, error, status } = await supabase
+        .from('games')
+        .select('players_in_game')
+        .match({
+          in_progress: true,
+          pin: activeGame,
+        })
+
+      if (error) console.error(status, error)
+
+      if (data.length > 0) {
+        // Turn our string of players into an array
+        const playersArr = JSON.parse(data[0].players_in_game)
+        const formattedPlayersArr = []
+
+        for (const player of playersArr) {
+          formattedPlayersArr.push(JSON.parse(player))
+        }
+
+        setPlayers(formattedPlayersArr)
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -156,13 +223,15 @@ const Game = () => {
         </Button>
       </form>
 
+      <Text>Players in current game:</Text>
+
       <Divider />
 
       <Heading as="h2" align="center">
         Start a game
       </Heading>
 
-      <Button onClick={createGame} isLoading={loading}>
+      <Button onClick={createGame} disabled={pin} isLoading={loading}>
         Create Game
       </Button>
 
