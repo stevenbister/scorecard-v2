@@ -12,23 +12,46 @@ import useLocalStorage from '../hooks/useLocalStorage'
 import { supabase } from '../utils/supabaseClient'
 import createPinNumber from '../utils/createPinNumber'
 
-const Game = () => {
+const Game = ({ user }) => {
   const [loading, setLoading] = useState(false)
   const [pin, setPin] = useLocalStorage('pin', '')
   const [activeGame, setActiveGame] = useLocalStorage('activeGame', '')
-  const [players, setPlayers] = useLocalStorage([])
+  const [players, setPlayers] = useLocalStorage('players', [])
 
   useEffect(() => {
     let mounted = true
 
     if (mounted) {
+      // TODO: A lot of boilerplate code going on -- could I refactor?
+      const getPlayersInGame = async () => {
+        try {
+          const { data, error, status } = await supabase
+            .from('games')
+            .select('players_in_game')
+            .match({
+              in_progress: true,
+              pin: activeGame,
+            })
+
+          if (error) console.error(status, error)
+
+          if (data.length > 0) {
+            // Turn our string of players into an array
+            const playersArr = JSON.parse(data[0].players_in_game)
+
+            setPlayers(playersArr)
+          }
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
       getPlayersInGame()
-      console.log({ players })
     }
 
     // Async side effect cleanup
     return () => (mounted = false)
-  }, [activeGame])
+  }, [activeGame, setPlayers])
 
   // Check our pin number against all of the currently live games.
   // If the pin exists elsewhere regenerate it so we don't ever have two
@@ -61,25 +84,23 @@ const Game = () => {
     }
   }
 
-  const createGame = async () => {
+  const createGame = async (user) => {
     try {
       setLoading(true)
-      const user = supabase.auth.user()
 
       const gamePin = await createGamePin()
-      setPin(gamePin)
-      setActiveGame(gamePin)
 
       const { data, error, status } = await supabase.from('games').insert({
         creator_id: user.id,
         pin: gamePin,
         in_progress: true,
-        players_in_game: JSON.stringify({ id: user.id }),
+        players_in_game: JSON.stringify([{ id: user.id }]),
       })
 
       if (error) console.error(status, error)
 
-      return data
+      setPin(gamePin)
+      setActiveGame(gamePin)
     } catch (error) {
       console.error(error)
     } finally {
@@ -88,10 +109,9 @@ const Game = () => {
   }
 
   // TODO: Would be worth deleting the table row once the game is over so we don’t end up with a massive db to loop over
-  const endGame = async (pin) => {
+  const endGame = async (pin, user) => {
     try {
       setLoading(true)
-      const user = supabase.auth.user()
 
       const { error, status } = await supabase
         .from('games')
@@ -106,6 +126,7 @@ const Game = () => {
       // Remove our saved pin number
       setPin('')
       setActiveGame('')
+      setPlayers([])
     } catch (error) {
       console.error(error)
     } finally {
@@ -114,7 +135,7 @@ const Game = () => {
   }
 
   // TODO: When joins successfully redirect player to the game screen
-  const joinGame = async (e) => {
+  const joinGame = async (e, user) => {
     e.preventDefault()
     // Join pin input values
     let pinInputValue = ''
@@ -129,7 +150,6 @@ const Game = () => {
 
     try {
       setLoading(true)
-      const user = supabase.auth.user()
 
       // Check to make sure our player isn't already in the game
       const activePlayers = await supabase
@@ -174,35 +194,6 @@ const Game = () => {
     }
   }
 
-  // TODO: A lot of boilerplate code going on -- could I refactor?
-  const getPlayersInGame = async () => {
-    try {
-      const { data, error, status } = await supabase
-        .from('games')
-        .select('players_in_game')
-        .match({
-          in_progress: true,
-          pin: activeGame,
-        })
-
-      if (error) console.error(status, error)
-
-      if (data.length > 0) {
-        // Turn our string of players into an array
-        const playersArr = JSON.parse(data[0].players_in_game)
-        const formattedPlayersArr = []
-
-        for (const player of playersArr) {
-          formattedPlayersArr.push(JSON.parse(player))
-        }
-
-        setPlayers(formattedPlayersArr)
-      }
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
   return (
     <VStack align="stretch">
       <Heading>Game</Heading>
@@ -210,7 +201,7 @@ const Game = () => {
         Join a game
       </Heading>
 
-      <form onSubmit={(e) => joinGame(e)} name="joinGame">
+      <form onSubmit={(e) => joinGame(e, user)} name="joinGame">
         <PinInput>
           <PinInputField />
           <PinInputField />
@@ -231,7 +222,11 @@ const Game = () => {
         Start a game
       </Heading>
 
-      <Button onClick={createGame} disabled={pin} isLoading={loading}>
+      <Button
+        onClick={() => createGame(user)}
+        disabled={pin}
+        isLoading={loading}
+      >
         Create Game
       </Button>
 
@@ -239,7 +234,7 @@ const Game = () => {
         <>
           <Text>Pin: {pin}</Text>
           <Button
-            onClick={() => endGame(pin)}
+            onClick={() => endGame(pin, user)}
             isLoading={loading}
             colorScheme="red"
           >
