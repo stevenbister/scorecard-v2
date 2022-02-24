@@ -137,6 +137,7 @@ const Game = ({ user }) => {
       setPin('')
       setActiveGame('')
       setPlayers([])
+      supabase.removeSubscription()
     } catch (error) {
       console.error(error)
     } finally {
@@ -169,25 +170,21 @@ const Game = ({ user }) => {
 
       // Turn our string of players into an array
       const { players_in_game } = activePlayers.data[0]
+      const playersJSON = JSON.parse(players_in_game)
 
-      const currentPlayers = players_in_game
-        .split(',')
-        .filter((currentPlayer) => currentPlayer !== '')
-
-      for (const currentPlayer of currentPlayers) {
-        if (currentPlayer === '') continue // Skip any blank strings
-        const currentPlayerID = JSON.parse(currentPlayer).id
+      for (const player of playersJSON) {
+        if (player === '') continue // Skip any blank strings
 
         // if user id doesn't match player id add them to the players list
-        if (user.id !== currentPlayerID) {
-          currentPlayers.push(JSON.stringify({ id: user.id }))
+        if (user.id !== player.id) {
+          playersJSON.push({ id: user.id })
         }
       }
 
       const updatePlayers = await supabase
         .from('games')
         .update({
-          players_in_game: JSON.stringify(currentPlayers),
+          players_in_game: JSON.stringify(playersJSON),
         })
         .match({ in_progress: true, pin: pinInputValue })
 
@@ -224,7 +221,16 @@ const Game = ({ user }) => {
         </Button>
       </form>
 
+      <Divider />
+
       <Text>Players in current game:</Text>
+
+      {console.log(players)}
+      <ul>
+        {players.map((player) => (
+          <li key={player.id}>{player.id}</li>
+        ))}
+      </ul>
 
       <Divider />
 
