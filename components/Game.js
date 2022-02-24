@@ -7,6 +7,7 @@ import {
   Heading,
   Text,
   VStack,
+  useToast,
 } from '@chakra-ui/react'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { supabase } from '../utils/supabaseClient'
@@ -17,6 +18,7 @@ const Game = ({ user }) => {
   const [pin, setPin] = useLocalStorage('pin', '')
   const [activeGame, setActiveGame] = useLocalStorage('activeGame', '')
   const [players, setPlayers] = useLocalStorage('players', [])
+  const toast = useToast()
 
   useEffect(() => {
     let mounted = true
@@ -102,6 +104,14 @@ const Game = ({ user }) => {
       setPin(gamePin)
       setActiveGame(gamePin)
     } catch (error) {
+      toast({
+        title: 'Something went wrong!',
+        description: error.error_description || error.message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+
       console.error(error)
     } finally {
       setLoading(false)
