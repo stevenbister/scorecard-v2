@@ -14,9 +14,11 @@ const useLocalStorage = (key, defaultValue) => {
   const [value, setValue] = useState(() => {
     // Check for a value in localstorage, if that exists use that otherwise use the
     // default value passed by our hook
-    const localValue = window.localStorage.getItem(key)
+    if (typeof window !== 'undefined') {
+      const localValue = window.localStorage.getItem(key)
 
-    return localValue !== null ? JSON.parse(localValue) : defaultValue
+      return localValue !== null ? JSON.parse(localValue) : defaultValue
+    }
   })
 
   // Make sure localstorage is kept in sync whenever the state value chages
