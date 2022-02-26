@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import useAuth from '../lib/auth/useAuth'
+import { useAuth } from '../lib/auth/useAuth'
 import {
   Button,
   FormControl,
@@ -40,10 +40,12 @@ const Auth = () => {
         Sign in via magic link with your email below
       </Text>
 
-      <form onSubmit={(e) => handleLogin(e)} noValidate>
+      <form onSubmit={(e) => handleLogin(e)} name="signInForm" noValidate>
         <VStack align="stretch">
           <FormControl isRequired isInvalid={isError}>
-            <FormLabel htmlFor="email">Your email</FormLabel>
+            <FormLabel htmlFor="email" data-testid="label">
+              Your email
+            </FormLabel>
             <Input
               id="email"
               type="email"
