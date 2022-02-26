@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Heading, Button, VStack } from '@chakra-ui/react'
+import { Heading, VStack } from '@chakra-ui/react'
 import ProfileForm from '../components/ProfileForm'
 import { supabase } from '../utils/supabaseClient'
 import { getProfile, updateProfile } from '../utils/manageProfile'
+import SignOutButton from '../components/SignOutButton'
 
 const Profile = () => {
   const [loading, setLoading] = useState(false)
@@ -54,11 +55,22 @@ const Profile = () => {
         loading={loading}
       />
 
-      <Button variant="outline" onClick={() => supabase.auth.signOut()}>
-        Sign Out
-      </Button>
+      <SignOutButton />
     </VStack>
   )
 }
 
 export default Profile
+
+export async function getServerSideProps({ req }) {
+  // check to see if a user is set
+  const { user } = await supabase.auth.api.getUserByCookie(req)
+
+  // if no user is set, redirect to the sign-in page
+  if (!user) {
+    return { props: {}, redirect: { destination: '/sign-in' } }
+  }
+
+  // if a user is set, pass it to the page via props
+  return { props: { user } }
+}
