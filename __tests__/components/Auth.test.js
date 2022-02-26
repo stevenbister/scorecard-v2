@@ -4,26 +4,6 @@ import Auth from '../../components/Auth'
 import { AuthProvider } from '../../lib/auth/AuthContext'
 import * as hooks from '../../lib/auth/useAuth'
 
-test('Renders the auth form', () => {
-  /*
-  <Auth /> is dependent on the useAuth() hook which uses our authContext. Therefore we need to wrap our component in our provider so we can access the conext
-  */
-  render(
-    <AuthProvider>
-      <Auth />
-    </AuthProvider>,
-  )
-
-  expect(screen.getByRole('form')).toBeInTheDocument()
-  expect(screen.getByLabelText(/your email/i)).toBeInTheDocument()
-  expect(screen.getByTestId('label')).toHaveTextContent(/your email\*/i)
-  expect(
-    screen.getByRole('button', {
-      name: /send magic link/i,
-    }),
-  ).toBeInTheDocument()
-})
-
 test('Shows an error message if the email address is empty', async () => {
   render(
     <AuthProvider>
