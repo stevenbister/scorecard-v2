@@ -55,6 +55,30 @@ const Game = ({ user }) => {
     return () => (mounted = false)
   }, [activeGame, setPlayers])
 
+  useEffect(() => {
+    const liveGameSubscription = supabase
+      .from(`games:pin=eq.${pin}`)
+      .on('*', (payload) => {
+        console.log('Change received!')
+        handleNewPlayer(payload)
+      })
+      .subscribe()
+
+    return () => supabase.removeSubscription(liveGameSubscription)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pin, players])
+
+  const handleNewPlayer = (payload) => {
+    console.log({ payload }) // TODO: Handle errors?
+
+    const { players_in_game } = payload.new
+
+    if (players_in_game) {
+      const playersJSON = JSON.parse(players_in_game)
+      setPlayers(playersJSON)
+    }
+  }
+
   // Check our pin number against all of the currently live games.
   // If the pin exists elsewhere regenerate it so we don't ever have two
   // games with the same access pin
@@ -137,6 +161,7 @@ const Game = ({ user }) => {
       setPin('')
       setActiveGame('')
       setPlayers([])
+      // TODO: Remove subscription
     } catch (error) {
       console.error(error)
     } finally {
@@ -169,25 +194,21 @@ const Game = ({ user }) => {
 
       // Turn our string of players into an array
       const { players_in_game } = activePlayers.data[0]
+      const playersJSON = JSON.parse(players_in_game)
 
-      const currentPlayers = players_in_game
-        .split(',')
-        .filter((currentPlayer) => currentPlayer !== '')
-
-      for (const currentPlayer of currentPlayers) {
-        if (currentPlayer === '') continue // Skip any blank strings
-        const currentPlayerID = JSON.parse(currentPlayer).id
+      for (const player of playersJSON) {
+        if (player === '') continue // Skip any blank strings
 
         // if user id doesn't match player id add them to the players list
-        if (user.id !== currentPlayerID) {
-          currentPlayers.push(JSON.stringify({ id: user.id }))
+        if (user.id !== player.id) {
+          playersJSON.push({ id: user.id })
         }
       }
 
       const updatePlayers = await supabase
         .from('games')
         .update({
-          players_in_game: JSON.stringify(currentPlayers),
+          players_in_game: JSON.stringify(playersJSON),
         })
         .match({ in_progress: true, pin: pinInputValue })
 
@@ -211,6 +232,7 @@ const Game = ({ user }) => {
         Join a game
       </Heading>
 
+      {/* TODO: Remove this when player joins so they can't join more than once */}
       <form onSubmit={(e) => joinGame(e, user)} name="joinGame">
         <PinInput>
           <PinInputField />
@@ -224,7 +246,15 @@ const Game = ({ user }) => {
         </Button>
       </form>
 
+      <Divider />
+
       <Text>Players in current game:</Text>
+
+      <ul>
+        {players.map((player) => (
+          <li key={player.id}>{player.id}</li>
+        ))}
+      </ul>
 
       <Divider />
 

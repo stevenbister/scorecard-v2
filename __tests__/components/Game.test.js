@@ -8,8 +8,8 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_KEY,
 )
 
-// Clear out db after tests have run
-afterEach(() => {
+// Clear out db before tests run
+beforeAll(() => {
   try {
     // TODO: Make this a utility function so we can use elsewhere
     const deleteAllRows = async () => {
