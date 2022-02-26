@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '../lib/auth/useAuth'
 import {
   Button,
@@ -6,15 +6,26 @@ import {
   FormLabel,
   FormErrorMessage,
   Input,
-  Text,
+  Heading,
   VStack,
 } from '@chakra-ui/react'
 
-const Auth = () => {
+const Auth = ({ heading }) => {
   const [email, setEmail] = useState('')
   const [isError, setIsError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
   const { signIn, loading } = useAuth()
+
+  useEffect(() => {
+    if (heading === 'Sign in') {
+      setSuccessMessage('Check your email for your magic link to login')
+    }
+
+    if (heading === 'Sign up') {
+      setSuccessMessage('Check your email for your link to complete sign up')
+    }
+  }, [heading])
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -30,15 +41,13 @@ const Auth = () => {
       setErrorMessage('Email is not valid')
     } else {
       setIsError(false)
-      await signIn({ email })
+      await signIn({ email, successMessage })
     }
   }
 
   return (
     <VStack align="stretch">
-      <Text className="description">
-        Sign in via magic link with your email below
-      </Text>
+      <Heading as="h1">{heading}</Heading>
 
       <form onSubmit={(e) => handleLogin(e)} name="signInForm" noValidate>
         <VStack align="stretch">
@@ -60,7 +69,7 @@ const Auth = () => {
           </FormControl>
 
           <Button type="submit" isLoading={loading}>
-            Send magic link
+            {heading}
           </Button>
         </VStack>
       </form>
