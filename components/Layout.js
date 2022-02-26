@@ -1,15 +1,14 @@
 import PropTypes from 'prop-types'
 import { ChakraProvider } from '@chakra-ui/react'
 import { Container } from '@chakra-ui/react'
-import Auth from './Auth'
 import Navigation from './Navigation'
 
-const Layout = ({ children, userSession }) => {
+const Layout = ({ children }) => {
   return (
     <ChakraProvider>
       <Container>
         <Navigation />
-        {userSession ? <main>{children}</main> : <Auth />}
+        <main>{children}</main>
       </Container>
     </ChakraProvider>
   )
