@@ -1,5 +1,5 @@
 import { Button } from '@chakra-ui/react'
-import useAuth from '../lib/auth/useAuth'
+import { useAuth } from '../lib/auth/useAuth'
 
 const SignOutButton = () => {
   const { signOut } = useAuth()
