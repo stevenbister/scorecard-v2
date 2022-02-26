@@ -19,7 +19,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '16'
-      - run: env
       - run: npm install
       - run: npm test
         env:
