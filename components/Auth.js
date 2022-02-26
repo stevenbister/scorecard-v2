@@ -13,13 +13,25 @@ import {
 const Auth = () => {
   const [email, setEmail] = useState('')
   const [isError, setIsError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
   const { signIn, loading } = useAuth()
 
-  // TODO: Handle form verification
   const handleLogin = async (e) => {
     e.preventDefault()
 
-    signIn({ email })
+    const input = e.target.elements.email
+    const emailRegex = /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/
+
+    if (input.value.length === 0) {
+      setIsError(true)
+      setErrorMessage('Email is required')
+    } else if (emailRegex.test(input.value) === false) {
+      setIsError(true)
+      setErrorMessage('Email is not valid')
+    } else {
+      setIsError(false)
+      await signIn({ email })
+    }
   }
 
   return (
@@ -28,19 +40,20 @@ const Auth = () => {
         Sign in via magic link with your email below
       </Text>
 
-      <form onSubmit={(e) => handleLogin(e)}>
+      <form onSubmit={(e) => handleLogin(e)} noValidate>
         <VStack align="stretch">
           <FormControl isRequired isInvalid={isError}>
             <FormLabel htmlFor="email">Your email</FormLabel>
             <Input
               id="email"
               type="email"
+              name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
 
             {isError ? (
-              <FormErrorMessage>Email is required</FormErrorMessage>
+              <FormErrorMessage>{errorMessage}</FormErrorMessage>
             ) : null}
           </FormControl>
 
