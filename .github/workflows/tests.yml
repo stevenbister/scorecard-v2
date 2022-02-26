@@ -19,9 +19,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '16'
+      - run: env
       - run: npm install
       - run: npm test
-      - run: env
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
