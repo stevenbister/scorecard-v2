@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { supabase } from '../utils/supabaseClient'
+import useAuth from '../lib/auth/useAuth'
 import {
   Button,
   FormControl,
@@ -8,44 +8,18 @@ import {
   Input,
   Text,
   VStack,
-  useToast,
 } from '@chakra-ui/react'
 
 const Auth = () => {
-  const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [isError, setIsError] = useState(false)
-  const toast = useToast()
+  const { signIn, loading } = useAuth()
 
+  // TODO: Handle form verification
   const handleLogin = async (e) => {
     e.preventDefault()
 
-    try {
-      setLoading(true)
-      const { error } = await supabase.auth.signIn({ email })
-
-      if (error) throw error
-
-      toast({
-        title: 'Success!',
-        description: 'Check your email for the login link!',
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-      })
-    } catch (error) {
-      setIsError(true)
-
-      toast({
-        title: 'Something went wrong!',
-        description: error.error_description || error.message,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-      })
-    } finally {
-      setLoading(false)
-    }
+    signIn({ email })
   }
 
   return (
