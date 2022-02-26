@@ -1,22 +1,12 @@
-import { useState, useEffect } from 'react'
-import { supabase } from '../utils/supabaseClient'
-import '../styles/globals.css'
+import { AuthProvider } from '../lib/auth/AuthContext'
 import Layout from '../components/Layout'
 
-function MyApp({ Component, pageProps }) {
-  const [session, setSession] = useState(null)
-
-  useEffect(() => {
-    setSession(supabase.auth.session())
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
-  }, [session])
-
+const MyApp = ({ Component, pageProps }) => {
   return (
-    <Layout userSession={session}>
-      <Component {...pageProps} userSession={session} />
+    <Layout>
+      <AuthProvider>
+        <Component {...pageProps} />
+      </AuthProvider>
     </Layout>
   )
 }
