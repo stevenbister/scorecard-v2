@@ -1,10 +1,16 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { AuthProvider } from '../../lib/auth/AuthContext'
+import Home from '../../pages/index'
 import SignIn from '../../pages/sign-in'
+import SignUp from '../../pages/sign-up'
 
-test('Renders the component', () => {
-  render(<SignIn />)
+test('Renders sign in / sign up button on the homepage', () => {
+  render(
+    <AuthProvider>
+      <Home />
+    </AuthProvider>,
+  )
 
   expect(
     screen.getByRole('heading', {
@@ -25,18 +31,12 @@ test('Renders the component', () => {
   ).toBeInTheDocument()
 })
 
-test('Renders the sign in form when sign in button is clicked', () => {
+test('Renders the sign in form', () => {
   render(
     <AuthProvider>
       <SignIn />
     </AuthProvider>,
   )
-
-  const signIn = screen.getByRole('button', {
-    name: /sign in/i,
-  })
-
-  userEvent.click(signIn)
 
   expect(
     screen.getByRole('heading', {
@@ -55,18 +55,12 @@ test('Renders the sign in form when sign in button is clicked', () => {
   ).toBeInTheDocument()
 })
 
-test('Renders the sign up form when sign up button is clicked', () => {
+test('Renders the sign up form', () => {
   render(
     <AuthProvider>
-      <SignIn />
+      <SignUp />
     </AuthProvider>,
   )
-
-  const signIn = screen.getByRole('button', {
-    name: /sign up/i,
-  })
-
-  userEvent.click(signIn)
 
   expect(
     screen.getByRole('heading', {
