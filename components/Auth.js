@@ -11,16 +11,29 @@ import {
   Link,
   VStack,
 } from '@chakra-ui/react'
+import { useForm } from '../lib/forms/useForm'
 
 const Auth = ({ heading }) => {
-  const [email, setEmail] = useState('')
-  const [emailIsError, setEmailIsError] = useState(false)
-  const [emailErrorMessage, setEmailErrorMessage] = useState('')
-  const [password, setPassword] = useState('')
-  const [passwordIsError, setPasswordIsError] = useState(false)
-  const [passwordErrorMessage, setPasswordErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
   const { signIn, loading } = useAuth()
+
+  const formFields = {
+    email: {
+      value: '',
+      isRequired: true,
+      pattern: /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/,
+      errorMessage: 'Email address is invalid',
+    },
+    password: {
+      value: '',
+      isRequired: true,
+      pattern:
+        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{6,}$/, //  Minimum six characters, at least one upper case English letter, one lower case English letter, one number and one special character.
+      errorMessage:
+        'Password must be at least six characters; contain one uppercase letter, one number and one special character',
+    },
+  }
+  const { fields, handleChange, validateFields, error } = useForm(formFields)
 
   useEffect(() => {
     if (heading === 'Sign in') {
@@ -32,47 +45,15 @@ const Auth = ({ heading }) => {
     }
   }, [heading])
 
-  const validateEmail = (email) => {
-    const emailRegex = /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/
-
-    if (email.length === 0) {
-      setEmailIsError(true)
-      setEmailErrorMessage('Email is required')
-    } else if (emailRegex.test(email) === false) {
-      setEmailIsError(true)
-      setEmailErrorMessage('Email is not valid')
-    } else {
-      setEmailIsError(false)
-    }
-  }
-
-  const validatePassword = (password) => {
-    //  Minimum six characters, at least one upper case English letter, one lower case English letter, one number and one special character.
-    const pwRegex =
-      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{6,}$/
-
-    if (password.length === 0) {
-      setPasswordIsError(true)
-      setPasswordErrorMessage('Password is required')
-    } else if (pwRegex.test(password) === false) {
-      setPasswordIsError(true)
-      setPasswordErrorMessage(
-        'Password must be at least six characters; contain one uppercase letter, one number and one special character',
-      )
-    } else {
-      setPasswordIsError(false)
-    }
-  }
-
   const handleLogin = async (e) => {
+    const email = fields.email.value
+    const password = fields.password.value
+
     e.preventDefault()
 
-    validateEmail(email)
-    validatePassword(password)
+    const { isValid } = validateFields()
 
-    if (emailIsError === false && passwordIsError == false) {
-      await signIn({ email, password, successMessage })
-    }
+    isValid ? await signIn({ email, password, successMessage }) : null
   }
 
   return (
@@ -81,7 +62,10 @@ const Auth = ({ heading }) => {
 
       <form onSubmit={(e) => handleLogin(e)} name="signInForm" noValidate>
         <VStack align="stretch">
-          <FormControl isRequired isInvalid={emailIsError}>
+          <FormControl
+            isRequired={formFields.email.isRequired}
+            isInvalid={error.email}
+          >
             <FormLabel htmlFor="email" data-testid="label">
               Your email
             </FormLabel>
@@ -89,28 +73,31 @@ const Auth = ({ heading }) => {
               id="email"
               type="email"
               name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={fields.email.value}
+              onChange={handleChange}
             />
 
-            {emailIsError ? (
-              <FormErrorMessage>{emailErrorMessage}</FormErrorMessage>
+            {error.email ? (
+              <FormErrorMessage>{error.email}</FormErrorMessage>
             ) : null}
           </FormControl>
 
-          <FormControl isRequired isInvalid={passwordIsError}>
+          <FormControl
+            isRequired={formFields.password.isRequired}
+            isInvalid={error.password}
+          >
             <FormLabel htmlFor="password">Password</FormLabel>
 
             <Input
               id="password"
               type="password"
               name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={fields.password.value}
+              onChange={handleChange}
             />
 
-            {passwordIsError ? (
-              <FormErrorMessage>{passwordErrorMessage}</FormErrorMessage>
+            {error.password ? (
+              <FormErrorMessage>{error.password}</FormErrorMessage>
             ) : null}
           </FormControl>
 
