@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react'
-import { Heading, VStack } from '@chakra-ui/react'
+import { Alert, AlertIcon, Heading, VStack } from '@chakra-ui/react'
 import ProfileForm from '../components/ProfileForm'
 import { supabase } from '../utils/supabaseClient'
 import { getProfile, updateProfile } from '../utils/manageProfile'
 import SignOutButton from '../components/SignOutButton'
+import { useAuth } from '../lib/auth/useAuth'
 
 const Profile = () => {
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
+  const { event } = useAuth()
 
   useEffect(() => {
     let mounted = true
@@ -46,6 +48,13 @@ const Profile = () => {
       <Heading as="h2" align="center">
         Update your details
       </Heading>
+
+      {event === 'USER_UPDATED' ? (
+        <Alert status="success">
+          <AlertIcon />
+          Your password was updated successfully
+        </Alert>
+      ) : null}
 
       <ProfileForm
         email={email}
