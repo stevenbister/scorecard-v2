@@ -2,6 +2,7 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Profile from '../../pages/profile'
 import ProfileForm from '../../components/ProfileForm'
+import { AuthProvider } from '../../lib/auth/AuthContext'
 import * as util from '../../utils/manageProfile'
 
 test('Renders the profile form', () => {
@@ -30,7 +31,11 @@ test('Successfully submits the form', async () => {
   util.getProfile = jest.fn(() => Promise.resolve(fakeUser))
   util.updateProfile = jest.fn(() => {})
 
-  render(<Profile />)
+  render(
+    <AuthProvider>
+      <Profile />
+    </AuthProvider>,
+  )
 
   const form = screen.getByRole('form')
   const userNameInput = screen.getByLabelText(/username/i)

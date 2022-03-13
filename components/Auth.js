@@ -1,80 +1,130 @@
-import { useState } from 'react'
-import { supabase } from '../utils/supabaseClient'
+import NextLink from 'next/link'
+import { useEffect, useState } from 'react'
+import { useAuth } from '../lib/auth/useAuth'
 import {
   Button,
   FormControl,
   FormLabel,
   FormErrorMessage,
+  Heading,
   Input,
-  Text,
+  Link,
   VStack,
-  useToast,
 } from '@chakra-ui/react'
 
-const Auth = () => {
-  const [loading, setLoading] = useState(false)
+const Auth = ({ heading }) => {
   const [email, setEmail] = useState('')
-  const [isError, setIsError] = useState(false)
-  const toast = useToast()
+  const [emailIsError, setEmailIsError] = useState(false)
+  const [emailErrorMessage, setEmailErrorMessage] = useState('')
+  const [password, setPassword] = useState('')
+  const [passwordIsError, setPasswordIsError] = useState(false)
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+  const { signIn, loading } = useAuth()
+
+  useEffect(() => {
+    if (heading === 'Sign in') {
+      setSuccessMessage('Check your email for your magic link to login')
+    }
+
+    if (heading === 'Sign up') {
+      setSuccessMessage('Check your email for your link to complete sign up')
+    }
+  }, [heading])
+
+  const validateEmail = (email) => {
+    const emailRegex = /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/
+
+    if (email.length === 0) {
+      setEmailIsError(true)
+      setEmailErrorMessage('Email is required')
+    } else if (emailRegex.test(email) === false) {
+      setEmailIsError(true)
+      setEmailErrorMessage('Email is not valid')
+    } else {
+      setEmailIsError(false)
+    }
+  }
+
+  const validatePassword = (password) => {
+    //  Minimum six characters, at least one upper case English letter, one lower case English letter, one number and one special character.
+    const pwRegex =
+      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{6,}$/
+
+    if (password.length === 0) {
+      setPasswordIsError(true)
+      setPasswordErrorMessage('Password is required')
+    } else if (pwRegex.test(password) === false) {
+      setPasswordIsError(true)
+      setPasswordErrorMessage(
+        'Password must be at least six characters; contain one uppercase letter, one number and one special character',
+      )
+    } else {
+      setPasswordIsError(false)
+    }
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault()
 
-    try {
-      setLoading(true)
-      const { error } = await supabase.auth.signIn({ email })
+    validateEmail(email)
+    validatePassword(password)
 
-      if (error) throw error
-
-      toast({
-        title: 'Success!',
-        description: 'Check your email for the login link!',
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-      })
-    } catch (error) {
-      setIsError(true)
-
-      toast({
-        title: 'Something went wrong!',
-        description: error.error_description || error.message,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-      })
-    } finally {
-      setLoading(false)
+    if (emailIsError === false && passwordIsError == false) {
+      await signIn({ email, password, successMessage })
     }
   }
 
   return (
     <VStack align="stretch">
-      <Text className="description">
-        Sign in via magic link with your email below
-      </Text>
+      <Heading as="h1">{heading}</Heading>
 
-      <form onSubmit={(e) => handleLogin(e)}>
+      <form onSubmit={(e) => handleLogin(e)} name="signInForm" noValidate>
         <VStack align="stretch">
-          <FormControl isRequired isInvalid={isError}>
-            <FormLabel htmlFor="email">Your email</FormLabel>
+          <FormControl isRequired isInvalid={emailIsError}>
+            <FormLabel htmlFor="email" data-testid="label">
+              Your email
+            </FormLabel>
             <Input
               id="email"
               type="email"
+              name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
 
-            {isError ? (
-              <FormErrorMessage>Email is required</FormErrorMessage>
+            {emailIsError ? (
+              <FormErrorMessage>{emailErrorMessage}</FormErrorMessage>
+            ) : null}
+          </FormControl>
+
+          <FormControl isRequired isInvalid={passwordIsError}>
+            <FormLabel htmlFor="password">Password</FormLabel>
+
+            <Input
+              id="password"
+              type="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            {passwordIsError ? (
+              <FormErrorMessage>{passwordErrorMessage}</FormErrorMessage>
             ) : null}
           </FormControl>
 
           <Button type="submit" isLoading={loading}>
-            Send magic link
+            {heading}
           </Button>
         </VStack>
       </form>
+
+      {heading === 'Sign in' ? (
+        <NextLink href="/resetPassword" passHref>
+          <Link>Forgotten your password?</Link>
+        </NextLink>
+      ) : null}
     </VStack>
   )
 }
