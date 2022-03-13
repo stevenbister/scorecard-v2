@@ -6,5 +6,7 @@ describe('Navigation', () => {
     render(<Navigation />)
 
     expect(screen.getByRole('navigation')).toBeInTheDocument()
+
+    expect(screen.getAllByRole('listitem')).toHaveLength(2)
   })
 })
