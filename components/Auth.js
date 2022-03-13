@@ -1,3 +1,4 @@
+import NextLink from 'next/link'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../lib/auth/useAuth'
 import {
@@ -5,8 +6,9 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
-  Input,
   Heading,
+  Input,
+  Link,
   VStack,
 } from '@chakra-ui/react'
 
@@ -117,6 +119,12 @@ const Auth = ({ heading }) => {
           </Button>
         </VStack>
       </form>
+
+      {heading === 'Sign in' ? (
+        <NextLink href="/resetPassword" passHref>
+          <Link>Forgotten your password?</Link>
+        </NextLink>
+      ) : null}
     </VStack>
   )
 }
