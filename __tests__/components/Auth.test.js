@@ -31,7 +31,7 @@ test('Shows an error message if the email address is invalid', async () => {
   userEvent.type(input, 'notanemail')
   fireEvent.submit(form)
 
-  await screen.findByText(/email is not valid/i)
+  await screen.findByText(/email address is invalid/i)
 })
 
 test('Shows an error message if the password is invalid', async () => {
