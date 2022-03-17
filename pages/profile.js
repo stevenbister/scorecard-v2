@@ -1,39 +1,22 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Alert, AlertIcon, Heading, VStack } from '@chakra-ui/react'
 import ProfileForm from '../components/ProfileForm'
 import { supabase } from '../utils/supabaseClient'
-import { getProfile, updateProfile } from '../utils/manageProfile'
 import SignOutButton from '../components/SignOutButton'
 import { useAuth } from '../lib/auth/useAuth'
+import { useProfile } from '../lib/profile/useProfile'
 
 const Profile = () => {
   const [loading, setLoading] = useState(false)
-  const [email, setEmail] = useState('')
-  const [username, setUsername] = useState('')
   const { event } = useAuth()
-
-  useEffect(() => {
-    let mounted = true
-
-    if (mounted) {
-      ;(async () => {
-        const profile = await getProfile()
-
-        profile.email ? setEmail(profile.email) : ''
-        profile.username ? setUsername(profile.username) : ''
-      })()
-    }
-
-    // Async side effect cleanup
-    return () => (mounted = false)
-  }, [])
+  const { email, username, setUsername, updateProfile, error } = useProfile()
 
   const updateUserProfile = async (e) => {
     e.preventDefault()
 
     try {
       setLoading(true)
-      await updateProfile(username)
+      await updateProfile()
     } finally {
       setLoading(false)
     }
@@ -44,7 +27,6 @@ const Profile = () => {
       <Heading as="h1" align="center">
         Your profile
       </Heading>
-
       <Heading as="h2" align="center">
         Update your details
       </Heading>
@@ -56,6 +38,13 @@ const Profile = () => {
         </Alert>
       ) : null}
 
+      {error ? (
+        <Alert status="error">
+          <AlertIcon />
+          {error.message}
+        </Alert>
+      ) : null}
+
       <ProfileForm
         email={email}
         userName={username}
@@ -63,7 +52,6 @@ const Profile = () => {
         handleSubmit={(e) => updateUserProfile(e)}
         loading={loading}
       />
-
       <SignOutButton />
     </VStack>
   )
