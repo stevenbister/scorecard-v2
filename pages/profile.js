@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Alert, AlertIcon, Heading, VStack } from '@chakra-ui/react'
+import Avatar from 'boring-avatars'
 import ProfileForm from '../components/ProfileForm'
 import { supabase } from '../utils/supabaseClient'
 import SignOutButton from '../components/SignOutButton'
@@ -31,6 +32,13 @@ const Profile = () => {
       <Heading as="h2" align="center">
         Update your details
       </Heading>
+
+      <Avatar
+        size={120}
+        name={username}
+        variant="beam"
+        colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+      />
 
       {event === 'USER_UPDATED' ? (
         <Alert status="success">
