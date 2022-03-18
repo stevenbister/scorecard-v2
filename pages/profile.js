@@ -8,8 +8,9 @@ import { useProfile } from '../lib/profile/useProfile'
 
 const Profile = () => {
   const [loading, setLoading] = useState(false)
-  const { event } = useAuth()
-  const { email, username, setUsername, updateProfile, error } = useProfile()
+  const { user, event } = useAuth()
+  const { email, username, setUsername, updateProfile, error } =
+    useProfile(user)
 
   const updateUserProfile = async (e) => {
     e.preventDefault()
