@@ -19,9 +19,7 @@ const Home = () => {
 
           <VStack align="stretch" spacing={6} px={20}>
             <Link href="/sign-in" passHref>
-              <Button as="a" full>
-                Sign in
-              </Button>
+              <Button as="a">Sign in</Button>
             </Link>
 
             <Link href="/sign-up" passHref>
