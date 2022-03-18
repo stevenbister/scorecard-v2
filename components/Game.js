@@ -8,16 +8,21 @@ import {
   Text,
   VStack,
   useToast,
+  UnorderedList,
+  ListItem,
 } from '@chakra-ui/react'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { supabase } from '../utils/supabaseClient'
 import createPinNumber from '../utils/createPinNumber'
+import { useAuth } from '../lib/auth/useAuth'
+import Player from './Player'
 
-const Game = ({ user }) => {
+const Game = () => {
   const [loading, setLoading] = useState(false)
   const [pin, setPin] = useLocalStorage('pin', '')
   const [activeGame, setActiveGame] = useLocalStorage('activeGame', '')
   const [players, setPlayers] = useLocalStorage('players', [])
+  const { user } = useAuth()
   const toast = useToast()
 
   useEffect(() => {
@@ -27,19 +32,20 @@ const Game = ({ user }) => {
       // TODO: A lot of boilerplate code going on -- could I refactor?
       const getPlayersInGame = async () => {
         try {
-          const { data, error, status } = await supabase
-            .from('games')
-            .select('players_in_game')
-            .match({
-              in_progress: true,
-              pin: activeGame,
-            })
+          const {
+            data: games,
+            error,
+            status,
+          } = await supabase.from('games').select('players_in_game').match({
+            in_progress: true,
+            pin: activeGame,
+          })
 
           if (error) console.error(status, error)
 
-          if (data.length > 0) {
+          if (games.length > 0) {
             // Turn our string of players into an array
-            const playersArr = JSON.parse(data[0].players_in_game)
+            const playersArr = JSON.parse(games[0].players_in_game)
 
             setPlayers(playersArr)
           }
@@ -250,11 +256,13 @@ const Game = ({ user }) => {
 
       <Text>Players in current game:</Text>
 
-      <ul>
+      <UnorderedList styleType="none">
         {players.map((player) => (
-          <li key={player.id}>{player.id}</li>
+          <ListItem key={player.id}>
+            <Player user={player} />
+          </ListItem>
         ))}
-      </ul>
+      </UnorderedList>
 
       <Divider />
 
