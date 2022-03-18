@@ -1,35 +1,17 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Profile from '../../pages/profile'
-import ProfileForm from '../../components/ProfileForm'
 import { AuthProvider } from '../../lib/auth/AuthContext'
-import * as util from '../../utils/manageProfile'
+import * as hooks from '../../lib/profile/useProfile'
 
-test('Renders the profile form', () => {
-  render(<ProfileForm />)
+const testUser = {
+  id: process.env.SUPABASE_TEST_USER_ID,
+  email: 'testuser@example.com',
+  username: 'TestUser',
+}
 
-  expect(screen.getByRole('form')).toBeInTheDocument()
-  expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
-  expect(screen.getByLabelText(/email/i)).toBeDisabled()
-  expect(screen.getByLabelText(/username/i)).toBeInTheDocument()
-  expect(
-    screen.getByRole('button', {
-      name: /update/i,
-    }),
-  ).toBeInTheDocument()
-})
-
-test('Successfully submits the form', async () => {
-  const originalGetProfile = util.getProfile
-  const originalUpdateProfile = util.updateProfile
-
-  const fakeUser = {
-    email: 'example@example.com',
-    username: 'exampleName',
-  }
-
-  util.getProfile = jest.fn(() => Promise.resolve(fakeUser))
-  util.updateProfile = jest.fn(() => {})
+const setUp = (options) => {
+  const spy = jest.spyOn(hooks, 'useProfile').mockImplementation(() => options)
 
   render(
     <AuthProvider>
@@ -37,18 +19,72 @@ test('Successfully submits the form', async () => {
     </AuthProvider>,
   )
 
+  return { spy }
+}
+
+test('Renders the users profile', () => {
+  setUp({
+    email: testUser.email,
+    username: testUser.username,
+  })
+
+  const emailInput = screen.getByLabelText(/email/i)
+  const userNameInput = screen.getByLabelText(/username/i)
+
+  expect(
+    screen.getByRole('heading', {
+      name: /your profile/i,
+    }),
+  )
+  expect(
+    screen.getByRole('heading', {
+      name: /update your details/i,
+    }),
+  )
+  expect(screen.getByRole('form')).toBeInTheDocument()
+
+  expect(emailInput).toBeInTheDocument()
+  expect(emailInput).toBeDisabled()
+  expect(emailInput).toHaveValue(testUser.email)
+
+  expect(userNameInput).toBeInTheDocument()
+  expect(userNameInput).toHaveValue(testUser.username)
+
+  expect(
+    screen.getByRole('button', {
+      name: /update/i,
+    }),
+  ).toBeInTheDocument()
+})
+
+test('Successfully updates the username', async () => {
+  setUp({
+    email: testUser.email,
+    username: testUser.username,
+    error: '',
+    setUsername: () => jest.fn(),
+    updateProfile: () => jest.fn(),
+  })
+
+  const spy = jest.spyOn(hooks, 'useProfile').mockImplementation(() => {
+    return {
+      email: testUser.email,
+      username: testUser.username,
+      error: '',
+      setUsername: () => jest.fn(),
+      updateProfile: () => jest.fn(),
+    }
+  })
+
   const form = screen.getByRole('form')
   const userNameInput = screen.getByLabelText(/username/i)
 
-  userEvent.type(userNameInput, fakeUser.username)
-  expect(userNameInput).toHaveValue(fakeUser.username)
+  userEvent.clear(userNameInput)
+
+  userEvent.type(userNameInput, 'newusername')
+  expect(userNameInput).toHaveValue('newusername')
 
   fireEvent.submit(form)
 
-  await waitFor(() => expect(util.updateProfile).toHaveBeenCalledTimes(1))
-
-  jest.clearAllMocks()
-  // Reset to original implementation after the te  st
-  util.getProfile.mockImplementation(originalGetProfile)
-  util.updateProfile.mockImplementation(originalUpdateProfile)
+  await waitFor(() => expect(spy).toHaveBeenCalled())
 })
