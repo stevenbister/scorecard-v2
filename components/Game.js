@@ -1,41 +1,18 @@
-import { useContext } from 'react'
-import {
-  Button,
-  Heading,
-  Text,
-  VStack,
-  UnorderedList,
-  ListItem,
-} from '@chakra-ui/react'
-import { GameContext } from '../lib/game/GameContext'
-import Player from './Player'
-import GamePinInput from './GamePinInput'
-import GamePinButton from './GamePinButton'
-import GameEndButton from './GameEndButton'
+import { Heading, VStack } from '@chakra-ui/react'
+import GameButton from './GameButton'
 
+// TODO: Start/join games should probably be a route or at least url params so we can go back with browser controls
 const Game = () => {
-  const { pin, players } = useContext(GameContext)
-
   return (
-    <VStack align="stretch">
-      <Heading>Game</Heading>
+    <VStack align="stretch" spacing={16} py={40}>
+      <Heading as="h1" align="center" size="3xl">
+        Scorecard
+      </Heading>
 
-      <Text>{pin}</Text>
-
-      {/* TODO: Remove this when player joins so they can't join more than once */}
-      <GamePinInput />
-
-      <GamePinButton />
-
-      <UnorderedList styleType="none">
-        {players.map((player) => (
-          <ListItem key={player.id}>
-            <Player user={player} />
-          </ListItem>
-        ))}
-      </UnorderedList>
-
-      <GameEndButton />
+      <VStack align="stretch" spacing={6} px={20}>
+        <GameButton type="start">Start a game</GameButton>
+        <GameButton type="join">Join a game</GameButton>
+      </VStack>
     </VStack>
   )
 }
