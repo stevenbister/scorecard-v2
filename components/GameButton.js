@@ -4,7 +4,7 @@ import { GameContext } from '../lib/game/GameContext'
 import Link from 'next/link'
 import { Button } from '@chakra-ui/react'
 
-const GameButton = ({ type, children }) => {
+const GameButton = ({ type, link, children }) => {
   const { createGame, loading } = useContext(GameContext)
 
   const functionType = type === 'start' ? createGame : null
@@ -12,7 +12,7 @@ const GameButton = ({ type, children }) => {
   const variant = type === 'join' ? 'outline' : null
 
   return (
-    <Link href="/" passHref>
+    <Link href={link} passHref>
       <Button
         as="a"
         onClick={functionType}
@@ -27,6 +27,7 @@ const GameButton = ({ type, children }) => {
 
 GameButton.propTypes = {
   type: PropTypes.string,
+  link: PropTypes.string.isRequired,
   children: PropTypes.node,
 }
 

@@ -10,8 +10,12 @@ const Game = () => {
       </Heading>
 
       <VStack align="stretch" spacing={6} px={20}>
-        <GameButton type="start">Start a game</GameButton>
-        <GameButton type="join">Join a game</GameButton>
+        <GameButton link="/lobby" type="start">
+          Start a game
+        </GameButton>
+        <GameButton link="/lobby" type="join">
+          Join a game
+        </GameButton>
       </VStack>
     </VStack>
   )
