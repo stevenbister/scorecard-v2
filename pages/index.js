@@ -11,9 +11,7 @@ const Home = () => {
   return (
     <>
       {loggedIn ? (
-        <GameProvider>
-          <Game />
-        </GameProvider>
+        <Game />
       ) : (
         <VStack align="stretch" spacing={16} py={40}>
           <Heading as="h1" align="center" size="3xl">
