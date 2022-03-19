@@ -48,7 +48,7 @@ const lobby = () => {
       {/* TODO: Remove this when player joins so they can't join more than once */}
       {pin ? null : <GamePinInput />}
 
-      {host ? (
+      {pin ? (
         <VStack
           align="stretch"
           spacing={0}
@@ -56,11 +56,14 @@ const lobby = () => {
           style={{ marginTop: 'auto' }}
         >
           {/* TODO: Add leave game option */}
-          <GameAlertButton>End game</GameAlertButton>
+
+          {host ? (
+            <GameAlertButton>End game</GameAlertButton>
+          ) : (
+            <GameAlertButton type="leave">Leave game</GameAlertButton>
+          )}
         </VStack>
-      ) : (
-        <GameAlertButton type="leave">Leave game</GameAlertButton>
-      )}
+      ) : null}
     </VStack>
   )
 }
