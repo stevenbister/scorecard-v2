@@ -3,6 +3,7 @@ import { Button, Heading, VStack } from '@chakra-ui/react'
 import Game from '../components/Game'
 import { supabase } from '../utils/supabaseClient'
 import { useAuth } from '../lib/auth/useAuth'
+import { GameProvider } from '../lib/game/GameContext'
 
 const Home = () => {
   const { loggedIn } = useAuth()
@@ -10,7 +11,9 @@ const Home = () => {
   return (
     <>
       {loggedIn ? (
-        <Game />
+        <GameProvider>
+          <Game />
+        </GameProvider>
       ) : (
         <VStack align="stretch" spacing={16} py={40}>
           <Heading as="h1" align="center" size="3xl">
