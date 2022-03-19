@@ -1,20 +1,18 @@
 import { useContext } from 'react'
+import PropTypes from 'prop-types'
 import { GameContext } from '../lib/game/GameContext'
 import Link from 'next/link'
 import { Button } from '@chakra-ui/react'
 
 const GameButton = ({ type, children }) => {
-  const { createGame, endGame, loading } = useContext(GameContext)
+  const { createGame, loading } = useContext(GameContext)
 
-  const functionType =
-    type === 'start' ? createGame : type === 'end' ? endGame : null
+  const functionType = type === 'start' ? createGame : null
 
-  const link = type === 'end' ? '/' : '/lobby'
-
-  const variant = type === 'join' || type === 'end' ? 'outline' : null
+  const variant = type === 'join' ? 'outline' : null
 
   return (
-    <Link href={link} passHref>
+    <Link href="/" passHref>
       <Button
         as="a"
         onClick={functionType}
@@ -25,6 +23,11 @@ const GameButton = ({ type, children }) => {
       </Button>
     </Link>
   )
+}
+
+GameButton.propTypes = {
+  type: PropTypes.string,
+  children: PropTypes.node,
 }
 
 export default GameButton

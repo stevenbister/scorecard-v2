@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react'
 import { GameContext } from '../lib/game/GameContext'
 import {
+  Button,
   Heading,
   Text,
   UnorderedList,
@@ -9,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import GamePinInput from '../components/GamePinInput'
 import Player from '../components/Player'
-import GameButton from '../components/GameButton'
+import GameAlertButton from '../components/GameAlertButton'
 
 const lobby = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -55,9 +56,11 @@ const lobby = () => {
           style={{ marginTop: 'auto' }}
         >
           {/* TODO: Add leave game option */}
-          <GameButton type="end">End game</GameButton>
+          <GameAlertButton>End game</GameAlertButton>
         </VStack>
-      ) : null}
+      ) : (
+        <GameAlertButton type="leave">Leave game</GameAlertButton>
+      )}
     </VStack>
   )
 }
