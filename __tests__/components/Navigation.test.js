@@ -1,12 +1,29 @@
 import { render, screen } from '@testing-library/react'
 import Navigation from '../../components/Navigation'
+import * as nextRouter from 'next/router'
 
-describe('Navigation', () => {
-  test('renders the nav', () => {
-    render(<Navigation />)
+test('renders the nav', () => {
+  const useRouter = jest.spyOn(nextRouter, 'useRouter')
 
-    expect(screen.getByRole('navigation')).toBeInTheDocument()
+  useRouter.mockImplementationOnce(() => ({
+    route: '/',
+  }))
 
-    expect(screen.getAllByRole('listitem')).toHaveLength(2)
-  })
+  render(<Navigation />)
+
+  expect(screen.getByRole('navigation')).toBeInTheDocument()
+
+  expect(screen.getAllByRole('listitem')).toHaveLength(2)
+
+  expect(
+    screen.getByRole('link', {
+      name: /home/i,
+    }),
+  ).toHaveAttribute('href', '/')
+
+  expect(
+    screen.getByRole('link', {
+      name: /profile/i,
+    }),
+  ).toHaveAttribute('href', '/profile')
 })
