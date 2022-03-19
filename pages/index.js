@@ -8,23 +8,29 @@ const Home = () => {
   const { loggedIn } = useAuth()
 
   return (
-    <div className="container" style={{ padding: '50px' }}>
+    <>
       {loggedIn ? (
         <Game />
       ) : (
-        <VStack align="stretch" spacing={6}>
-          <Heading as="h1">Scorecard</Heading>
+        <VStack align="stretch" spacing={16} py={40}>
+          <Heading as="h1" align="center" size="3xl">
+            Scorecard
+          </Heading>
 
-          <Link href="/sign-in" passHref>
-            <Button>Sign in</Button>
-          </Link>
+          <VStack align="stretch" spacing={6} px={20}>
+            <Link href="/sign-in" passHref>
+              <Button as="a">Sign in</Button>
+            </Link>
 
-          <Link href="/sign-up" passHref>
-            <Button variant="outline">Sign up</Button>
-          </Link>
+            <Link href="/sign-up" passHref>
+              <Button as="a" variant="outline">
+                Sign up
+              </Button>
+            </Link>
+          </VStack>
         </VStack>
       )}
-    </div>
+    </>
   )
 }
 

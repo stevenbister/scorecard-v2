@@ -1,13 +1,16 @@
 import PropTypes from 'prop-types'
-import { ChakraProvider } from '@chakra-ui/react'
-import { Container } from '@chakra-ui/react'
+import { ChakraProvider, Container } from '@chakra-ui/react'
+import theme from '../lib/theme'
 import Navigation from './Navigation'
+import '@fontsource/inter/400.css'
+import '@fontsource/inter/600.css'
+import '@fontsource/inter/800.css'
 
 const Layout = ({ children }) => {
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
+      <Navigation />
       <Container>
-        <Navigation />
         <main>{children}</main>
       </Container>
     </ChakraProvider>

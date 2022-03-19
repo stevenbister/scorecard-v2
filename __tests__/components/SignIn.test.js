@@ -19,13 +19,13 @@ test('Renders sign in / sign up button on the homepage', () => {
   ).toBeInTheDocument()
 
   expect(
-    screen.getByRole('button', {
+    screen.getByRole('link', {
       name: /sign in/i,
     }),
   ).toBeInTheDocument()
 
   expect(
-    screen.getByRole('button', {
+    screen.getByRole('link', {
       name: /sign up/i,
     }),
   ).toBeInTheDocument()

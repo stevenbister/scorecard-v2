@@ -33,14 +33,10 @@ test('Renders the users profile', () => {
 
   expect(
     screen.getByRole('heading', {
-      name: /your profile/i,
+      name: /profile/i,
     }),
   )
-  expect(
-    screen.getByRole('heading', {
-      name: /update your details/i,
-    }),
-  )
+
   expect(screen.getByRole('form')).toBeInTheDocument()
 
   expect(emailInput).toBeInTheDocument()

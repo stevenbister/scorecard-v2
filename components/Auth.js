@@ -10,6 +10,7 @@ import {
   Input,
   Link,
   VStack,
+  Box,
 } from '@chakra-ui/react'
 import { useForm } from '../lib/forms/useForm'
 
@@ -57,55 +58,54 @@ const Auth = ({ heading }) => {
   }
 
   return (
-    <VStack align="stretch">
-      <Heading as="h1">{heading}</Heading>
+    <VStack align="stretch" py={28}>
+      <Heading as="h1" align="center" size="3xl">
+        {heading}
+      </Heading>
 
-      <form onSubmit={(e) => handleLogin(e)} name="signInForm" noValidate>
-        <VStack align="stretch">
-          <FormControl
-            isRequired={formFields.email.isRequired}
-            isInvalid={error.email}
-          >
-            <FormLabel htmlFor="email" data-testid="label">
-              Your email
-            </FormLabel>
-            <Input
-              id="email"
-              type="email"
-              name="email"
-              value={fields.email.value}
-              onChange={handleChange}
-            />
-
-            {error.email ? (
-              <FormErrorMessage>{error.email}</FormErrorMessage>
-            ) : null}
-          </FormControl>
-
-          <FormControl
-            isRequired={formFields.password.isRequired}
-            isInvalid={error.password}
-          >
-            <FormLabel htmlFor="password">Password</FormLabel>
-
-            <Input
-              id="password"
-              type="password"
-              name="password"
-              value={fields.password.value}
-              onChange={handleChange}
-            />
-
-            {error.password ? (
-              <FormErrorMessage>{error.password}</FormErrorMessage>
-            ) : null}
-          </FormControl>
-
-          <Button type="submit" isLoading={loading}>
-            {heading}
-          </Button>
-        </VStack>
-      </form>
+      <Box pt={16}>
+        <form onSubmit={(e) => handleLogin(e)} name="signInForm" noValidate>
+          <VStack spacing={4} align="flex-start">
+            <FormControl
+              isRequired={formFields.email.isRequired}
+              isInvalid={error.email}
+            >
+              <FormLabel htmlFor="email" data-testid="label">
+                Your email
+              </FormLabel>
+              <Input
+                id="email"
+                type="email"
+                name="email"
+                value={fields.email.value}
+                onChange={handleChange}
+              />
+              {error.email ? (
+                <FormErrorMessage>{error.email}</FormErrorMessage>
+              ) : null}
+            </FormControl>
+            <FormControl
+              isRequired={formFields.password.isRequired}
+              isInvalid={error.password}
+            >
+              <FormLabel htmlFor="password">Password</FormLabel>
+              <Input
+                id="password"
+                type="password"
+                name="password"
+                value={fields.password.value}
+                onChange={handleChange}
+              />
+              {error.password ? (
+                <FormErrorMessage>{error.password}</FormErrorMessage>
+              ) : null}
+            </FormControl>
+            <Button type="submit" isLoading={loading}>
+              {heading}
+            </Button>
+          </VStack>
+        </form>
+      </Box>
 
       {heading === 'Sign in' ? (
         <NextLink href="/resetPassword" passHref>

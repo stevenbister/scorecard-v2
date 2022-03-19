@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Alert, AlertIcon, Heading, VStack } from '@chakra-ui/react'
 import ProfileForm from '../components/ProfileForm'
 import { supabase } from '../utils/supabaseClient'
-import SignOutButton from '../components/SignOutButton'
 import Player from '../components/Player'
 import { useAuth } from '../lib/auth/useAuth'
 import { useProfile } from '../lib/profile/useProfile'
@@ -25,12 +24,9 @@ const Profile = () => {
   }
 
   return (
-    <VStack align="stretch" spacing={6}>
-      <Heading as="h1" align="center">
-        Your profile
-      </Heading>
-      <Heading as="h2" align="center">
-        Update your details
+    <VStack align="stretch" spacing={6} py={28}>
+      <Heading as="h1" align="center" size="3xl">
+        Profile
       </Heading>
 
       <Player user={user} />
@@ -56,7 +52,6 @@ const Profile = () => {
         handleSubmit={(e) => updateUserProfile(e)}
         loading={loading}
       />
-      <SignOutButton />
     </VStack>
   )
 }
