@@ -23,7 +23,7 @@ const lobby = () => {
       style={{ minHeight: 'calc(100vh - 62px)' }}
     >
       <Heading as="h1" align="center" size="3xl">
-        {host ? `Pin: ${pin}` : 'Join a game'}
+        {pin ? `Pin: ${pin}` : 'Join a game'}
       </Heading>
 
       <VStack align="stretch">
@@ -38,10 +38,14 @@ const lobby = () => {
         {host && players?.length <= 1 ? (
           <Text align="center">Waiting for players...</Text>
         ) : null}
+
+        {!host ? (
+          <Text align="center">Waiting for game to start...</Text>
+        ) : null}
       </VStack>
 
       {/* TODO: Remove this when player joins so they can't join more than once */}
-      {host ? null : <GamePinInput />}
+      {pin ? null : <GamePinInput />}
 
       {host ? (
         <VStack
