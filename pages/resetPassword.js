@@ -9,6 +9,8 @@ import {
   Input,
   VStack,
 } from '@chakra-ui/react'
+import FormError from '../components/FormError'
+import FormSuccess from '../components/FormSuccess'
 
 const ResetPassword = () => {
   const [email, setEmail] = useState('')
@@ -17,8 +19,14 @@ const ResetPassword = () => {
   const [password, setPassword] = useState('')
   const [passwordIsError, setPasswordIsError] = useState(false)
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('')
-  const { sendResetPasswordLink, updateUserPassword, event, loading } =
-    useAuth()
+  const {
+    sendResetPasswordLink,
+    updateUserPassword,
+    event,
+    message,
+    error,
+    loading,
+  } = useAuth()
 
   // TODO: Repeating this -- turn into a util
   const validateEmail = (email) => {
@@ -108,6 +116,9 @@ const ResetPassword = () => {
               ) : null}
             </FormControl>
           ) : null}
+
+          {error ? <FormError error={error} /> : null}
+          {message ? <FormSuccess message={message} /> : null}
 
           <Button type="submit" isLoading={loading}>
             {event === 'PASSWORD_RECOVERY'
