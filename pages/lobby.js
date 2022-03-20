@@ -41,7 +41,7 @@ const Lobby = () => {
           <Text align="center">Waiting for players...</Text>
         ) : null}
 
-        {!host ? (
+        {!host && pin ? (
           <Text align="center">Waiting for game to start...</Text>
         ) : null}
       </VStack>
