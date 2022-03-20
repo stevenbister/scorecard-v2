@@ -12,8 +12,7 @@ import GamePinInput from '../components/GamePinInput'
 import Player from '../components/Player'
 import GameAlertButton from '../components/GameAlertButton'
 
-const lobby = () => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+const Lobby = () => {
   const { pin, players, host } = useContext(GameContext)
 
   return (
@@ -28,13 +27,15 @@ const lobby = () => {
       </Heading>
 
       <VStack align="stretch">
-        <UnorderedList styleType="none" style={{ margin: 0 }}>
-          {players?.map((player) => (
-            <ListItem key={player.id}>
-              <Player user={player} />
-            </ListItem>
-          ))}
-        </UnorderedList>
+        {pin ? (
+          <UnorderedList styleType="none" style={{ margin: 0 }}>
+            {players?.map((player) => (
+              <ListItem key={player.id}>
+                <Player user={player} />
+              </ListItem>
+            ))}
+          </UnorderedList>
+        ) : null}
 
         {host && players?.length <= 1 ? (
           <Text align="center">Waiting for players...</Text>
@@ -56,7 +57,6 @@ const lobby = () => {
           style={{ marginTop: 'auto' }}
         >
           {/* TODO: Add leave game option */}
-
           {host ? (
             <GameAlertButton>End game</GameAlertButton>
           ) : (
@@ -68,4 +68,4 @@ const lobby = () => {
   )
 }
 
-export default lobby
+export default Lobby
