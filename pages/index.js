@@ -1,23 +1,27 @@
 import Link from 'next/link'
 import { Button, Heading, VStack } from '@chakra-ui/react'
-import Game from '../components/Game'
 import { supabase } from '../utils/supabaseClient'
-import { useAuth } from '../lib/auth/useAuth'
+import GameButton from '../components/GameButton'
 
-const Home = () => {
-  const { loggedIn } = useAuth()
-
+const Home = ({ user }) => {
   return (
-    <>
-      {loggedIn ? (
-        <Game />
-      ) : (
-        <VStack align="stretch" spacing={16} py={40}>
-          <Heading as="h1" align="center" size="3xl">
-            Scorecard
-          </Heading>
+    <VStack align="stretch" spacing={16} py={40}>
+      <Heading as="h1" align="center" size="3xl">
+        Scorecard
+      </Heading>
 
-          <VStack align="stretch" spacing={6} px={20}>
+      <VStack align="stretch" spacing={6} px={20}>
+        {user ? (
+          <>
+            <GameButton link="/lobby" type="start">
+              Start a game
+            </GameButton>
+            <GameButton link="/lobby" type="join">
+              Join a game
+            </GameButton>
+          </>
+        ) : (
+          <>
             <Link href="/sign-in" passHref>
               <Button as="a">Sign in</Button>
             </Link>
@@ -27,10 +31,10 @@ const Home = () => {
                 Sign up
               </Button>
             </Link>
-          </VStack>
-        </VStack>
-      )}
-    </>
+          </>
+        )}
+      </VStack>
+    </VStack>
   )
 }
 
