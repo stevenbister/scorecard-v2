@@ -3,7 +3,6 @@ import { Button, Heading, VStack } from '@chakra-ui/react'
 import Game from '../components/Game'
 import { supabase } from '../utils/supabaseClient'
 import { useAuth } from '../lib/auth/useAuth'
-import { GameProvider } from '../lib/game/GameContext'
 
 const Home = () => {
   const { loggedIn } = useAuth()
