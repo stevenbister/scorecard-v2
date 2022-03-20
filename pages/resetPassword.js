@@ -110,7 +110,9 @@ const ResetPassword = () => {
           ) : null}
 
           <Button type="submit" isLoading={loading}>
-            Send reset link
+            {event === 'PASSWORD_RECOVERY'
+              ? 'Update my password'
+              : 'Send reset link'}
           </Button>
         </VStack>
       </form>
