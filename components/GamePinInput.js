@@ -2,6 +2,9 @@ import { useContext } from 'react'
 import { GameContext } from '../lib/game/GameContext'
 import Link from 'next/link'
 import {
+  Alert,
+  AlertIcon,
+  AlertDescription,
   Button,
   FormControl,
   FormLabel,
@@ -12,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 
 const GamePinInput = () => {
-  const { joinGame, loading } = useContext(GameContext)
+  const { joinGame, loading, error } = useContext(GameContext)
 
   return (
     <>
@@ -35,6 +38,13 @@ const GamePinInput = () => {
           </FormControl>
         </VStack>
       </form>
+
+      {error ? (
+        <Alert status="error" color="red.900">
+          <AlertIcon />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      ) : null}
 
       <VStack align="stretch" p={20} style={{ marginTop: 'auto' }}>
         <Button form="joinGame" type="submit" isLoading={loading}>
