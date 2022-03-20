@@ -1,7 +1,6 @@
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import { GameContext } from '../lib/game/GameContext'
 import {
-  Button,
   Heading,
   Text,
   UnorderedList,
@@ -46,7 +45,6 @@ const Lobby = () => {
         ) : null}
       </VStack>
 
-      {/* TODO: Remove this when player joins so they can't join more than once */}
       {pin ? null : <GamePinInput />}
 
       {pin ? (
@@ -56,7 +54,6 @@ const Lobby = () => {
           p={20}
           style={{ marginTop: 'auto' }}
         >
-          {/* TODO: Add leave game option */}
           {host ? (
             <GameAlertButton>End game</GameAlertButton>
           ) : (
