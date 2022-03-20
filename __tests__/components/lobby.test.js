@@ -36,7 +36,7 @@ test('Renders the start and join links on the homepage once user is signed in', 
   render(
     <AuthProvider>
       <GameProvider>
-        <Home />
+        <Home user={testUser} />
       </GameProvider>
     </AuthProvider>,
   )
