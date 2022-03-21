@@ -1,8 +1,85 @@
-import { render, screen, waitFor, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import Auth from '../../components/Auth'
 import { AuthProvider } from '../../lib/auth/AuthContext'
-import * as hooks from '../../lib/auth/useAuth'
+import Home from '../../pages/index'
+import SignIn from '../../pages/sign-in'
+import SignUp from '../../pages/sign-up'
+import Auth from '../../components/Auth'
+import * as mockUseAuth from '../../lib/auth/useAuth'
+
+test('Renders sign in / sign up button on the homepage', () => {
+  render(
+    <AuthProvider>
+      <Home />
+    </AuthProvider>,
+  )
+
+  expect(
+    screen.getByRole('heading', {
+      name: /scorecard/i,
+    }),
+  ).toBeInTheDocument()
+
+  expect(
+    screen.getByRole('link', {
+      name: /sign in/i,
+    }),
+  ).toBeInTheDocument()
+
+  expect(
+    screen.getByRole('link', {
+      name: /sign up/i,
+    }),
+  ).toBeInTheDocument()
+})
+
+test('Renders the sign in form', () => {
+  render(
+    <AuthProvider>
+      <SignIn />
+    </AuthProvider>,
+  )
+
+  expect(
+    screen.getByRole('heading', {
+      name: /sign in/i,
+    }),
+  ).toBeInTheDocument()
+
+  expect(screen.getByRole('form')).toBeInTheDocument()
+
+  expect(screen.getByLabelText(/your email/i)).toBeInTheDocument()
+  expect(screen.getByTestId('label')).toHaveTextContent(/your email\*/i)
+  expect(
+    screen.getByRole('button', {
+      name: /sign in/i,
+    }),
+  ).toBeInTheDocument()
+})
+
+test('Renders the sign up form', () => {
+  render(
+    <AuthProvider>
+      <SignUp />
+    </AuthProvider>,
+  )
+
+  expect(
+    screen.getByRole('heading', {
+      name: /sign up/i,
+    }),
+  ).toBeInTheDocument()
+
+  expect(screen.getByRole('form')).toBeInTheDocument()
+
+  expect(screen.getByLabelText(/your email/i)).toBeInTheDocument()
+  expect(screen.getByTestId('label')).toHaveTextContent(/your email\*/i)
+  expect(
+    screen.getByRole('button', {
+      name: /sign up/i,
+    }),
+  ).toBeInTheDocument()
+})
 
 test('Shows an error message if the email address or the password input is empty', async () => {
   render(
@@ -53,7 +130,7 @@ test('Shows an error message if the password is invalid', async () => {
 })
 
 test('Successfully submits the form', async () => {
-  const spy = jest.spyOn(hooks, 'useAuth').mockImplementation(() => {
+  const spy = jest.spyOn(mockUseAuth, 'useAuth').mockImplementation(() => {
     return {
       signIn: jest.fn(),
     }
