@@ -47,14 +47,16 @@ describe('Resetpassword request', () => {
     ).toBeInTheDocument()
   })
 
-  test('Validates the email address field', async () => {
+  test.only('Validates the email address field', async () => {
     mockContext.error = 'User not found'
     const emailInput = screen.getByLabelText(/your email/i)
 
     userEvent.type(emailInput, 'notanemail')
     fireEvent.submit(screen.getByRole('form'))
 
-    expect(await screen.findByText(/email is not valid/i)).toBeInTheDocument()
+    expect(
+      await screen.findByText(/email address is invalid/i),
+    ).toBeInTheDocument()
     expect(await screen.findByText(mockContext.error)).toBeInTheDocument()
   })
 

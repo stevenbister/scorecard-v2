@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../lib/auth/useAuth'
+import { useForm } from '../lib/forms/useForm'
 import {
   Button,
   FormControl,
@@ -13,64 +14,42 @@ import FormError from '../components/FormError'
 import FormSuccess from '../components/FormSuccess'
 
 const ResetPassword = () => {
-  const [email, setEmail] = useState('')
-  const [emailIsError, setEmailIsError] = useState(false)
-  const [emailErrorMessage, setEmailErrorMessage] = useState('')
-  const [password, setPassword] = useState('')
-  const [passwordIsError, setPasswordIsError] = useState(false)
-  const [passwordErrorMessage, setPasswordErrorMessage] = useState('')
   const {
     sendResetPasswordLink,
     updateUserPassword,
     event,
     message,
-    error,
+    error: authError,
     loading,
   } = useAuth()
 
-  // TODO: Repeating this -- turn into a util
-  const validateEmail = (email) => {
-    const emailRegex = /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/
-
-    if (email.length === 0) {
-      setEmailIsError(true)
-      setEmailErrorMessage('Email is required')
-    } else if (emailRegex.test(email) === false) {
-      setEmailIsError(true)
-      setEmailErrorMessage('Email is not valid')
-    } else {
-      setEmailIsError(false)
-    }
-  }
-
-  const validatePassword = (password) => {
-    //  Minimum six characters, at least one upper case English letter, one lower case English letter, one number and one special character.
-    const pwRegex =
-      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{6,}$/
-
-    if (password.length === 0) {
-      setPasswordIsError(true)
-      setPasswordErrorMessage('Password is required')
-    } else if (pwRegex.test(password) === false) {
-      setPasswordIsError(true)
-      setPasswordErrorMessage(
+  const formFields = {
+    email: {
+      value: '',
+      isRequired: true,
+      pattern: /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/,
+      errorMessage: 'Email address is invalid',
+    },
+    password: {
+      value: '',
+      isRequired: true,
+      pattern:
+        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{6,}$/, //  Minimum six characters, at least one upper case English letter, one lower case English letter, one number and one special character.
+      errorMessage:
         'Password must be at least six characters; contain one uppercase letter, one number and one special character',
-      )
-    } else {
-      setPasswordIsError(false)
-    }
+    },
   }
+  const { fields, handleChange, validateFields, error } = useForm(formFields)
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    validateEmail(email)
-    validatePassword(password)
+    const { isValid } = validateFields()
 
     if (event === 'PASSWORD_RECOVERY') {
-      passwordIsError ? null : updateUserPassword(password)
+      isValid ? null : updateUserPassword(password)
     } else {
-      emailIsError ? null : sendResetPasswordLink(email)
+      isValid ? null : sendResetPasswordLink(email)
     }
   }
 
@@ -81,7 +60,7 @@ const ResetPassword = () => {
       <form onSubmit={(e) => handleSubmit(e)} name="resetPassword" noValidate>
         <VStack align="stretch">
           {event !== 'PASSWORD_RECOVERY' ? (
-            <FormControl isRequired isInvalid={emailIsError}>
+            <FormControl isRequired isInvalid={error.email}>
               <FormLabel htmlFor="email" data-testid="label">
                 Your email
               </FormLabel>
@@ -89,35 +68,35 @@ const ResetPassword = () => {
                 id="email"
                 type="email"
                 name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={fields.email.value}
+                onChange={handleChange}
               />
 
-              {emailIsError ? (
-                <FormErrorMessage>{emailErrorMessage}</FormErrorMessage>
+              {error.email ? (
+                <FormErrorMessage>{error.email}</FormErrorMessage>
               ) : null}
             </FormControl>
           ) : null}
 
           {event === 'PASSWORD_RECOVERY' ? (
-            <FormControl isRequired isInvalid={passwordIsError}>
+            <FormControl isRequired isInvalid={error.password}>
               <FormLabel htmlFor="password">Password</FormLabel>
 
               <Input
                 id="password"
                 type="password"
                 name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={fields.password.value}
+                onChange={handleChange}
               />
 
-              {passwordIsError ? (
-                <FormErrorMessage>{passwordErrorMessage}</FormErrorMessage>
+              {error.password ? (
+                <FormErrorMessage>{error.password}</FormErrorMessage>
               ) : null}
             </FormControl>
           ) : null}
 
-          {error ? <FormError error={error} /> : null}
+          {authError ? <FormError error={authError} /> : null}
           {message ? <FormSuccess message={message} /> : null}
 
           <Button type="submit" isLoading={loading}>
