@@ -13,10 +13,11 @@ import {
   Box,
 } from '@chakra-ui/react'
 import { useForm } from '../lib/forms/useForm'
+import FormError from './FormError'
 
 const Auth = ({ heading }) => {
   const [successMessage, setSuccessMessage] = useState('')
-  const { signIn, loading } = useAuth()
+  const { signIn, error: authError, loading } = useAuth()
 
   const formFields = {
     email: {
@@ -100,6 +101,9 @@ const Auth = ({ heading }) => {
                 <FormErrorMessage>{error.password}</FormErrorMessage>
               ) : null}
             </FormControl>
+
+            {authError ? <FormError error={authError} /> : null}
+
             <Button type="submit" isLoading={loading}>
               {heading}
             </Button>
