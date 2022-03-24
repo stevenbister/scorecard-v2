@@ -47,7 +47,7 @@ describe('Resetpassword request', () => {
     ).toBeInTheDocument()
   })
 
-  test.only('Validates the email address field', async () => {
+  test('Validates the email address field', async () => {
     mockContext.error = 'User not found'
     const emailInput = screen.getByLabelText(/your email/i)
 
