@@ -7,6 +7,10 @@
 
 # testing
 /coverage
+cypress/videos
+cypress/screenshots
+cypress/fixtures/example.json
+cypress/integration/examples
 
 # next.js
 /.next/
