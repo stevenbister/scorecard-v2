@@ -23,3 +23,22 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+// Login to our app
+// -------------------
+Cypress.Commands.add('login', (user) => {
+  cy.get('input[type="email"]')
+    .type(user.email, { log: false })
+    .should('have.value', user.email)
+
+  cy.get('input[type="password"]')
+    .type(user.password, { log: false })
+    .should((el$) => {
+      // Check password is correct without displaying it in the logs
+      if (el$.val() !== user.password) {
+        throw new Error('Different value of typed password')
+      }
+    })
+
+  cy.get('button[type="submit"]').click()
+})
