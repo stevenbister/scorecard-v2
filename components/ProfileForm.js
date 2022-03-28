@@ -14,7 +14,7 @@ const ProfileForm = ({
   email,
   userName,
   handleSubmit,
-  setUserName,
+  handleChange,
   loading,
 }) => {
   return (
@@ -38,7 +38,7 @@ const ProfileForm = ({
               name="username"
               type="text"
               defaultValue={userName ? userName : ''}
-              onChange={setUserName}
+              onChange={handleChange}
             />
           </FormControl>
 
