@@ -6,9 +6,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "cypress:open": "cypress open"
+    "test:e2e": "start-server-and-test dev http://localhost:3000 cypress:run",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@chakra-ui/icons": "^1.1.5",
@@ -36,6 +38,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^27.5.0",
-    "prettier": "^2.5.1"
+    "prettier": "^2.5.1",
+    "start-server-and-test": "^1.14.0"
   }
 }
