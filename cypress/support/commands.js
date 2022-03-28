@@ -54,3 +54,19 @@ Cypress.Commands.add('login', (user, validUser = true) => {
     })
   }
 })
+
+// Tidy up our profile edits
+// ------------------------
+Cypress.Commands.add('tidyUp', (type) => {
+  if (type === 'profile') {
+    cy.visit('/profile')
+
+    cy.findByLabelText('Username')
+      .type('{selectall}{backspace}{selectall}{backspace}')
+      .type(Cypress.env('username'))
+
+    cy.findByRole('button', {
+      name: /update/i,
+    }).click()
+  }
+})
