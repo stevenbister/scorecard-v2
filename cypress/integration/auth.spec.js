@@ -20,13 +20,13 @@ context('Sign in flow', () => {
     cy.visit('/sign-in')
   })
 
-  it('Shows an error if we try and login with a non existant user', () => {
+  it('Shows an error if we try and login with a non-existant user', () => {
     const testUser = {
       email: 'test@test.com',
       password: 'EU9nwH8V%f&#',
     }
 
-    cy.login(testUser)
+    cy.login(testUser, false)
 
     cy.get('div[role="alert"]')
       .should('be.visible')

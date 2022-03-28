@@ -26,7 +26,7 @@
 
 // Login to our app
 // -------------------
-Cypress.Commands.add('login', (user) => {
+Cypress.Commands.add('login', (user, validUser = true) => {
   cy.get('input[type="email"]')
     .type(user.email, { log: false })
     .should('have.value', user.email)
@@ -41,4 +41,15 @@ Cypress.Commands.add('login', (user) => {
     })
 
   cy.get('button[type="submit"]').click()
+
+  cy.intercept('POST', '/api/auth').as('login')
+
+  if (validUser) {
+    cy.wait('@login').its('response.statusCode').should('equal', 200)
+    cy.wait('@login').then((interception) => {
+      console.log(interception)
+
+      expect(interception.request.body.event).to.equal('SIGNED_IN')
+    })
+  }
 })
