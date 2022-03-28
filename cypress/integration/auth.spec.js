@@ -69,5 +69,13 @@ context('Sign out flow', () => {
       .click()
 
     cy.url().should('eq', Cypress.config().baseUrl)
+
+    cy.get('.chakra-heading').as('heading')
+    cy.get('.chakra-button:first').as('primaryButton')
+    cy.get('.chakra-button:last').as('secondaryButton')
+
+    cy.get('@heading').should('have.text', 'Scorecard')
+    cy.get('@primaryButton').should('have.text', 'Sign in')
+    cy.get('@secondaryButton').should('have.text', 'Sign up')
   })
 })
