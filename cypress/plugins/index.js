@@ -21,8 +21,9 @@ module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
 
-  config.env.username = process.env.SUPABASE_TEST_USER_EMAIL
+  config.env.email = process.env.SUPABASE_TEST_USER_EMAIL
   config.env.password = process.env.SUPABASE_TEST_USER_PASSWORD
+  config.env.username = process.env.SUPABASE_TEST_USERNAME
 
   return config
 }

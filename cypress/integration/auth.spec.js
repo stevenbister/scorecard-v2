@@ -31,7 +31,7 @@ context('Sign in flow', () => {
 
   it('Sends user back to updated homepage when they sign in', () => {
     const testUser = {
-      email: Cypress.env('username'),
+      email: Cypress.env('email'),
       password: Cypress.env('password'),
     }
 
@@ -52,7 +52,7 @@ context('Sign in flow', () => {
 context('Sign out flow', () => {
   before(() => {
     const testUser = {
-      email: Cypress.env('username'),
+      email: Cypress.env('email'),
       password: Cypress.env('password'),
     }
 

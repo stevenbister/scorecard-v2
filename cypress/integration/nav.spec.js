@@ -17,7 +17,7 @@ context('User is unauthenticated', () => {
 context('User is authenticated', () => {
   before(() => {
     const testUser = {
-      email: Cypress.env('username'),
+      email: Cypress.env('email'),
       password: Cypress.env('password'),
     }
 
