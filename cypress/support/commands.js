@@ -24,6 +24,8 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import '@testing-library/cypress/add-commands'
+
 // Login to our app
 // -------------------
 Cypress.Commands.add('login', (user, validUser = true) => {
@@ -48,8 +50,6 @@ Cypress.Commands.add('login', (user, validUser = true) => {
   if (validUser) {
     cy.wait('@login').its('response.statusCode').should('equal', 200)
     cy.wait('@login').then((interception) => {
-      console.log(interception)
-
       expect(interception.request.body.event).to.equal('SIGNED_IN')
     })
   }
