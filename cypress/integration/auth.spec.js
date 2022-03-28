@@ -16,10 +16,6 @@ it('Navigates user to the sign in page', () => {
 })
 
 context('Sign in flow', () => {
-  beforeEach(() => {
-    cy.visit('/sign-in')
-  })
-
   it('Shows an error if we try and login with a non-existant user', () => {
     const testUser = {
       email: 'test@test.com',
@@ -50,5 +46,28 @@ context('Sign in flow', () => {
     cy.get('@heading').should('have.text', 'Scorecard')
     cy.get('@primaryButton').should('have.text', 'Start a game')
     cy.get('@secondaryButton').should('have.text', 'Join a game')
+  })
+})
+
+context('Sign out flow', () => {
+  before(() => {
+    const testUser = {
+      email: Cypress.env('username'),
+      password: Cypress.env('password'),
+    }
+
+    cy.login(testUser)
+  })
+
+  it('Signs the user out of their account', () => {
+    cy.visit('/profile')
+
+    cy.findByRole('button', {
+      name: /sign out/i,
+    })
+      .should('exist')
+      .click()
+
+    cy.url().should('eq', Cypress.config().baseUrl)
   })
 })
