@@ -60,7 +60,7 @@ context('Sign in flow', () => {
 
     cy.get('@submit').click()
 
-    cy.url().should('eq', 'http://localhost:3000/')
+    cy.url().should('eq', Cypress.config().baseUrl)
 
     cy.get('.chakra-heading').as('heading')
     cy.get('.chakra-button:first').as('primaryButton')
