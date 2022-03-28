@@ -27,6 +27,7 @@
 // Login to our app
 // -------------------
 Cypress.Commands.add('login', (user, validUser = true) => {
+  cy.visit('/sign-in')
   cy.get('input[type="email"]')
     .type(user.email, { log: false })
     .should('have.value', user.email)
