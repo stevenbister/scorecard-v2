@@ -30,7 +30,7 @@ const Player = ({ user }) => {
 }
 
 Player.propTypes = {
-  username: PropTypes.object,
+  user: PropTypes.object,
 }
 
 export default Player
