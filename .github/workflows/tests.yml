@@ -33,10 +33,14 @@ jobs:
       - name: Create env file
         run: |
           touch .env.test.local
-          echo SUPABASE_TEST_USER_EMAIL=${{ secrets.SUPABASE_TEST_USER_EMAIL }} >> .env
-          echo SUPABASE_TEST_USER_PASSWORD=${{ secrets.SUPABASE_TEST_USER_PASSWORD }} >> .env
-          echo SUPABASE_TEST_USERNAME=${{ secrets.SUPABASE_TEST_USERNAME }} >> .env
+          echo SUPABASE_TEST_USER_EMAIL=$SUPABASE_TEST_USER_EMAIL >> .env
+          echo SUPABASE_TEST_USER_PASSWORD=$SUPABASE_TEST_USER_PASSWORD >> .env
+          echo SUPABASE_TEST_USERNAME=$SUPABASE_TEST_USERNAME >> .env
           cat .env
+        env:
+          SUPABASE_TEST_USER_EMAIL: ${{ secrets.SUPABASE_TEST_USER_EMAIL }}
+          SUPABASE_TEST_USER_PASSWORD: ${{ secrets.SUPABASE_TEST_USER_PASSWORD }}
+          SUPABASE_TEST_USERNAME: ${{ secrets.SUPABASE_TEST_USERNAME }}
       - name: Run Cypress
         uses: actions/setup-node@v1
         with:
