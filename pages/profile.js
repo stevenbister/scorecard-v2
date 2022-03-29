@@ -29,7 +29,7 @@ const Profile = ({ user }) => {
         Profile
       </Heading>
 
-      <Player username={username} />
+      <Player user={user} />
 
       {event === 'USER_UPDATED' ? (
         <Alert status="success">

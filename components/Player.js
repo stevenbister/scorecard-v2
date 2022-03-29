@@ -1,8 +1,11 @@
 import PropTypes from 'prop-types'
 import { Box, Text } from '@chakra-ui/react'
 import Avatar from 'boring-avatars'
+import { useProfile } from '../lib/profile/useProfile'
 
-const Player = ({ username }) => {
+const Player = ({ user }) => {
+  const { username } = useProfile(user)
+
   return (
     <Box
       borderBottom="1px"
@@ -26,7 +29,7 @@ const Player = ({ username }) => {
 }
 
 Player.propTypes = {
-  username: PropTypes.string,
+  username: PropTypes.object,
 }
 
 export default Player
