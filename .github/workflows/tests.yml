@@ -43,3 +43,8 @@ jobs:
           node-version: '16'
       - run: npm install
       - run: npm run test:e2e
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          SUPABASE_TEST_USER_ID: ${{ secrets.SUPABASE_TEST_USER_ID }}
