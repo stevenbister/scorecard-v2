@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Router from 'next/router'
 import { Alert, AlertIcon, Heading, VStack } from '@chakra-ui/react'
 import ProfileForm from '../components/ProfileForm'
 import { supabase } from '../utils/supabaseClient'
@@ -18,6 +19,7 @@ const Profile = ({ user }) => {
     try {
       setLoading(true)
       await updateProfile()
+      Router.reload()
     } finally {
       setLoading(false)
     }
@@ -29,7 +31,7 @@ const Profile = ({ user }) => {
         Profile
       </Heading>
 
-      <Player user={user} />
+      <Player user={user} username={username} />
 
       {event === 'USER_UPDATED' ? (
         <Alert status="success">
