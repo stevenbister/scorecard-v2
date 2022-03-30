@@ -27,7 +27,11 @@ const Lobby = () => {
 
       <VStack align="stretch">
         {pin ? (
-          <UnorderedList styleType="none" style={{ margin: 0 }}>
+          <UnorderedList
+            styleType="none"
+            style={{ margin: 0 }}
+            data-testid="playerList"
+          >
             {players?.map((player) => (
               <ListItem key={player.id}>
                 <Player user={player} />

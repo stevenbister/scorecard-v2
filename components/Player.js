@@ -13,6 +13,7 @@ const Player = ({ user }) => {
       display="flex"
       alignItems="center"
       p={2}
+      data-testid="player"
     >
       <Avatar
         size={40}

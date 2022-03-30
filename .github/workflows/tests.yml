@@ -3,6 +3,18 @@ name: Tests CI
 # Controls when the workflow will run
 on: [push, workflow_dispatch]
 
+env:
+  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+  SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+  SUPABASE_TEST_USER_ID: ${{ secrets.SUPABASE_TEST_USER_ID }}
+  SUPABASE_TEST_USER_EMAIL: ${{ secrets.SUPABASE_TEST_USER_EMAIL }}
+  SUPABASE_TEST_USER_PASSWORD: ${{ secrets.SUPABASE_TEST_USER_PASSWORD }}
+  SUPABASE_TEST_USERNAME: ${{ secrets.SUPABASE_TEST_USERNAME }}
+  CYPRESS_SUPABASE_TEST_USER_EMAIL: ${{ secrets.SUPABASE_TEST_USER_EMAIL }}
+  CYPRESS_SUPABASE_TEST_USER_PASSWORD: ${{ secrets.SUPABASE_TEST_USER_PASSWORD }}
+  CYPRESS_SUPABASE_TEST_USERNAME: ${{ secrets.SUPABASE_TEST_USERNAME }}
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   static-eslint:
@@ -21,8 +33,21 @@ jobs:
           node-version: '16'
       - run: npm install
       - run: npm test
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          SUPABASE_TEST_USER_ID: ${{ secrets.SUPABASE_TEST_USER_ID }}
+  e2e-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create env file
+        run: |
+          touch .env.test.local
+          echo SUPABASE_TEST_USER_EMAIL=$SUPABASE_TEST_USER_EMAIL >> .env
+          echo SUPABASE_TEST_USER_PASSWORD=$SUPABASE_TEST_USER_PASSWORD >> .env
+          echo SUPABASE_TEST_USERNAME=$SUPABASE_TEST_USERNAME >> .env
+          cat .env
+
+      - name: Run Cypress
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+      - run: npm install
+      - run: npm run test:e2e
