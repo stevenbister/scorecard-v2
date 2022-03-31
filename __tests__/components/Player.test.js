@@ -1,4 +1,4 @@
-import { getByTitle, render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { AuthProvider } from '../../lib/auth/AuthContext'
 import Player from '../../components/Player'
 import * as hooks from '../../lib/profile/useProfile'
@@ -21,4 +21,15 @@ test('Renders the player component', () => {
   expect(screen.getByTitle(testUser.username)).toBeInTheDocument()
 
   expect(screen.getAllByText(testUser.username)).toHaveLength(2)
+})
+
+test('Displays the player score', () => {
+  render(
+    <AuthProvider>
+      <Player score={50} />
+    </AuthProvider>,
+  )
+
+  expect(screen.getByTestId('score')).toBeInTheDocument()
+  expect(screen.getByTestId('score')).toHaveTextContent(50)
 })
