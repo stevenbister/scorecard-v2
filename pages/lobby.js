@@ -1,4 +1,5 @@
 import { useContext } from 'react'
+import NextLink from 'next/link'
 import { GameContext } from '../lib/game/GameContext'
 import {
   Heading,
@@ -6,6 +7,7 @@ import {
   UnorderedList,
   ListItem,
   VStack,
+  Button,
 } from '@chakra-ui/react'
 import GamePinInput from '../components/GamePinInput'
 import Player from '../components/Player'
@@ -59,7 +61,16 @@ const Lobby = () => {
           style={{ marginTop: 'auto' }}
         >
           {host ? (
-            <GameAlertButton>End game</GameAlertButton>
+            <>
+              <VStack align="stretch" spacing={8}>
+                {/* TODO: Set this to be dynamic so only works if more than one player is available */}
+                <NextLink href="/game" passHref>
+                  <Button as="a">Start game</Button>
+                </NextLink>
+
+                <GameAlertButton>End game</GameAlertButton>
+              </VStack>
+            </>
           ) : (
             <GameAlertButton type="leave">Leave game</GameAlertButton>
           )}
