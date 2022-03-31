@@ -3,7 +3,7 @@ import { Box, Text } from '@chakra-ui/react'
 import Avatar from 'boring-avatars'
 import { useProfile } from '../lib/profile/useProfile'
 
-const Player = ({ user }) => {
+const Player = ({ user, score }) => {
   const { username } = useProfile(user)
 
   return (
@@ -25,12 +25,25 @@ const Player = ({ user }) => {
       <Text fontWeight="semibold" fontSize={20} px={4}>
         {username}
       </Text>
+
+      {score ? (
+        <Text
+          fontWeight="semibold"
+          fontSize={20}
+          px={4}
+          ml="auto"
+          data-testid="score"
+        >
+          {score}
+        </Text>
+      ) : null}
     </Box>
   )
 }
 
 Player.propTypes = {
   user: PropTypes.object,
+  score: PropTypes.number,
 }
 
 export default Player
