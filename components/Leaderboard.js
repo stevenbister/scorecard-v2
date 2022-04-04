@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import Player from '../components/Player'
 import { Text, Box, UnorderedList, ListItem } from '@chakra-ui/react'
 
-const Leaderboard = ({ players }) => {
+const Leaderboard = ({ players, score }) => {
   return (
     <Box>
       <Text size="lg" textAlign="center">
@@ -15,7 +15,7 @@ const Leaderboard = ({ players }) => {
       >
         {players?.map((player) => (
           <ListItem key={player.id}>
-            <Player user={player} score={123} />
+            <Player user={player} score={score} />
           </ListItem>
         ))}
       </UnorderedList>
