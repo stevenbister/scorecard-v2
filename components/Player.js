@@ -43,7 +43,7 @@ const Player = ({ user, score }) => {
 
 Player.propTypes = {
   user: PropTypes.object,
-  score: PropTypes.number,
+  score: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 }
 
 export default Player
