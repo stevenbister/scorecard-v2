@@ -27,7 +27,7 @@ const ProfileForm = ({
               id="email"
               name="email"
               type="email"
-              defaultValue={email ? email : 'example@example.com'}
+              defaultValue={email ? email : ''}
               disabled
             />
           </FormControl>

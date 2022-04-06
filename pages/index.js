@@ -1,9 +1,11 @@
 import Link from 'next/link'
 import { Button, Heading, VStack } from '@chakra-ui/react'
-import { supabase } from '../utils/supabaseClient'
 import GameButton from '../components/GameButton'
+import { useAuth } from '../lib/auth/useAuth'
 
-const Home = ({ user }) => {
+const Home = () => {
+  const { user } = useAuth()
+
   return (
     <VStack align="stretch" spacing={16} py={40}>
       <Heading as="h1" align="center" size="3xl">
@@ -39,11 +41,3 @@ const Home = ({ user }) => {
 }
 
 export default Home
-
-export async function getServerSideProps({ req }) {
-  // check to see if a user is set
-  const { user } = await supabase.auth.api.getUserByCookie(req)
-
-  // if a user is set, pass it to the page via props
-  return { props: { user } }
-}
